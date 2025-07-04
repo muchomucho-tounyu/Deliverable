@@ -20,6 +20,12 @@ Route::get('/', function () {
 });
 
 Route::resource('posts', PostController::class)->middleware('auth');
+Route::get('/posts/create', [PostController::class, 'create']);
+
+Route::get('/posts/{post}/edit', [PostController::class, 'edit']);
+Route::put('/posts/{post}', [PostController::class, 'update']);
+Route::destroy('/posts/{post}', [PostController::class, 'delete']);
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

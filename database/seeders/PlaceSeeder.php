@@ -15,10 +15,10 @@ class PlaceSeeder extends Seeder
     {
         Place::insert([
             [
-                'name' => '栃木足利学校',
-                'address' => '栃木県足利市昌平町2338',
-                'latitude' => 36.3359860,
-                'longitude' => 139.4535860,
+                'name' => '成城学園',
+                'address' => '東京都世田谷区成城6-1-20',
+                'latitude' => 35.645364,
+                'longitude' => 139.600542,
             ],
             [
                 'name' => '雪が谷大塚駅',

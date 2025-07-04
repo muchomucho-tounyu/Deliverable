@@ -10,6 +10,9 @@
 
 <body>
     <h1>聖地リスト</h1>
+    <br>
+    <a href='/posts/create'>create</a>
+    <br>
     @foreach($posts as $post)
     <div class="post-item">
         <!-- 画像 -->
@@ -22,9 +25,7 @@
 
         <!-- 場所名 -->
         <p>
-            @foreach ($post->places as $place)
-            {{ $place->name }}
-            @endforeach
+            {{ $post->place->name ?? '未設定' }}
         </p>
 
 
@@ -40,6 +41,7 @@
             なし
             @endif
         </p>
+        <br>
     </div>
     @endforeach
 

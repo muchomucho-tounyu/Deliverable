@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Song extends Model
 {
     use HasFactory;
+    protected $fillable = ['name'];
     public function people()
     {
         return $this->belongsToMany(Person::class);

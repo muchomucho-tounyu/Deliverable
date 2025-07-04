@@ -24,11 +24,11 @@ class PostSeeder extends Seeder
             'place_id' => 1,
 
             'image_path' => '',
-            'place_detail' => '栃木足利学校',
+            'place_detail' => '成城学園',
             'title' => '花より男子の学校',
             'body' => null,
-            'latitude' => 36.3359860,
-            'longitude' => 139.4535860,
+            'latitude' => 35.645364,
+            'longitude' => 139.600542,
         ]);
 
         $post1->people()->attach([4, 13]);

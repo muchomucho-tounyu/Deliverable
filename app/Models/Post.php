@@ -10,12 +10,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Post extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+
     public function getPaginateByLimit(int $limit_count = 5)
     {
         return $this::with('user')->orderBy('updated_at', 'desc')->paginate($limit_count);
     }
 
     protected $fillable = [
+        'title',
         'work_id',
         'work_name',
         'song_id',
@@ -45,9 +48,9 @@ class Post extends Model
         return $this->belongsTo(Song::class);
     }
 
-    public function places()
+    public function place()
     {
-        return $this->belongsToMany(Place::class);
+        return $this->belongsTo(Place::class);
     }
 
     public function user()

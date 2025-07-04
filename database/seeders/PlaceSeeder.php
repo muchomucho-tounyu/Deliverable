@@ -102,7 +102,7 @@ class PlaceSeeder extends Seeder
                 'name' => '鹿嶋灘海浜公園',
                 'address' => '茨城県鉾田市大竹390',
                 'latitude' => 36.1505955,
-                'longitude' => 140.5774134,,
+                'longitude' => 140.5774134,
             ],
             [
                 'name' => '象の鼻パーク',

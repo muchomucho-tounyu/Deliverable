@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Song extends Model
 {
     use HasFactory;
+    public function people()
+    {
+        return $this->belongsToMany(Person::class);
+    }
+    public function works()
+    {
+        return $this->belongsToMany(work::class);
+    }
+    public function places()
+    {
+        return $this->belongsToMany(Place::class);
+    }
 }

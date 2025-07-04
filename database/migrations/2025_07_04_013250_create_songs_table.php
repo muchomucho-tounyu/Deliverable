@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('songs', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->integer('release_year')->nullable();   // 放送年・発売年
+            $table->string('mv_url')->nullable(); // MVのYouTubeなどのURL
             $table->timestamps();
         });
     }

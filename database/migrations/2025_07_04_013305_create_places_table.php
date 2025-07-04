@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('places', function (Blueprint $table) {
             $table->id();
+            $table->string('name');               // 場所の名前
+            $table->string('address')->nullable(); // 住所
+            $table->decimal('latitude', 10, 7)->nullable();  // 緯度（Google Map用）
+            $table->decimal('longitude', 10, 7)->nullable(); // 経度（Google Map用）
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

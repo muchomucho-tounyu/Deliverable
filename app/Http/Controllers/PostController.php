@@ -14,11 +14,26 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with(['place', 'work', 'song'])->orderBy('updated_at', 'desc')->paginate(10);
+        $keyword = $request->input('keyword');
+
+        $query = Post::with(['user', 'work', 'song', 'place', 'people']);
+        if (!empty($keyword)) {
+            $query->where('title', 'like', "%{$keyword}%")
+                ->orWhereHas('user', fn($q) => $q->where('name', 'like', "%{$keyword}%"))
+                ->orWhereHas('work', fn($q) => $q->where('name', 'like', "%{$keyword}%"))
+                ->orWhereHas('song', fn($q) => $q->where('name', 'like', "%{$keyword}%"))
+                ->orWhereHas('place', fn($q) => $q->where('name', 'like', "%{$keyword}%"))
+                ->orWhereHas('people', fn($q) => $q->where('name', 'like', "%{$keyword}%"));
+        }
+
+        $posts = $query->orderBy('updated_at', 'desc')->paginate(10);
+
+
         return view('posts.index', compact('posts')); //
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -172,7 +187,7 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function delete(Post $post)
     {
         $post->delete();
 

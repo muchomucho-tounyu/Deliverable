@@ -37,6 +37,31 @@
     <p><strong>投稿者：</strong> {{ $post->user->name ?? '不明' }}</p>
     <p><strong>投稿日：</strong> {{ $post->created_at->format('Y年m月d日 H:i') }}</p>
 
+    <!-- いいねボタン -->
+    <form action="{{ route('posts.favorite', $post) }}" method="POST">
+        @csrf
+        <button type="submit">
+            @if(auth()->check() && auth()->user()->hasFavorited($post))
+            ❤️ いいね済み
+            @else
+            🤍 いいね
+            @endif
+        </button>
+    </form>
+
+    <!-- 訪問済みボタン -->
+    <form action="{{ route('posts.visit', $post) }}" method="POST">
+        @csrf
+        <button type="submit">
+            @if(auth()->check() && auth()->user()->hasVisited($post))
+            👣 訪問済み
+            @else
+            ☁️ 未開拓
+            @endif
+        </button>
+    </form>
+
+
     <div class="edit"><a href="/posts/{{ $post->id }}/edit">編集</a></div>
 
 

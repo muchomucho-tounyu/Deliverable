@@ -39,8 +39,11 @@ Route::get('/dashboard', function () {
 Route::get('/mypage', [UserController::class, 'mypage'])->middleware('auth')->name('mypage');
 Route::post('/users/{user}/follow', [UserController::class, 'follow'])->middleware('auth')->name('user.follow');
 Route::delete('/users/{user}/unfollow', [UserController::class, 'unfollow'])->middleware('auth')->name('user.unfollow');
+Route::get('/mypage/{id}/edit', [UserController::class, 'edit'])->name('mypage.edit');
+Route::put('/mypage', [UserController::class, 'update'])->name('user.update');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

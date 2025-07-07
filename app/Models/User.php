@@ -69,4 +69,14 @@ class User extends Authenticatable
     {
         return $this->visits()->where('post_id', $post->id)->exists();
     }
+
+    public function followings()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'followed_id', 'follower_id');
+    }
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'followed_id');
+    }
 }

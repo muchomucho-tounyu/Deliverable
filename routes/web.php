@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\VisitController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,10 @@ Route::post('/posts/{post}/visit', [VisitController::class, 'toggle'])->middlewa
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/mypage', [UserController::class, 'mypage'])->middleware('auth')->name('mypage');
+Route::post('/users/{user}/follow', [UserController::class, 'follow'])->middleware('auth')->name('user.follow');
+Route::delete('/users/{user}/unfollow', [UserController::class, 'unfollow'])->middleware('auth')->name('user.unfollow');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

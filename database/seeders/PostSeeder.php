@@ -26,7 +26,7 @@ class PostSeeder extends Seeder
             'image_path' => '',
             'place_detail' => '成城学園',
             'title' => '花より男子の学校',
-            'body' => null,
+            'body' => '学校生活だけでなく、学園祭のシーンでも使われている。',
             'latitude' => 35.645364,
             'longitude' => 139.600542,
         ]);
@@ -42,8 +42,8 @@ class PostSeeder extends Seeder
 
             'image_path' => '',
             'place_detail' => '雪が谷大塚駅',
-            'title' => 'いつかこの恋を思い出してしまうの駅',
-            'body' => null,
+            'title' => '主人公たちが再会する駅',
+            'body' => '音と練がそれぞれ利用するコインランドリーは、音が「雪が谷大塚南口店」、練が「雪が谷大塚北口店」を訪れている。ただ二人がコインランドリーを利用するだけの場面だが、二人のすれ違いを感じさせる印象的なシーンになっている。',
             'latitude' => 35.5920000,
             'longitude' => 139.6809720,
         ]);
@@ -59,8 +59,8 @@ class PostSeeder extends Seeder
 
             'image_path' => '',
             'place_detail' => 'アルテリーベ横浜本店',
-            'title' => '逃げ恥プロポーズシーン',
-            'body' => null,
+            'title' => 'プロポーズシーン',
+            'body' => 'デートや話し合いのシーンでも。',
             'latitude' => 35.4495970,
             'longitude' => 139.6380400,
         ]);
@@ -76,8 +76,8 @@ class PostSeeder extends Seeder
 
             'image_path' => '',
             'place_detail' => ' 警視庁芝浦警察署',
-            'title' => 'MIU404捜査本部として使用された建物',
-            'body' => null,
+            'title' => '捜査本部として使用された建物',
+            'body' => '捜査や交番のシーン。特に主人公たちが事件の打ち合わせや日常の様子を見せるシーンで登場。',
             'latitude'  => 35.6420800,
             'longitude' => 139.4193500,
         ]);
@@ -94,7 +94,7 @@ class PostSeeder extends Seeder
             'image_path' => '',
             'place_detail' => '関東柔道整復専門学校',
             'title' => '手話教室「手話ふぁみりー」の外観',
-            'body' => null,
+            'body' => '学校生活の描写や友達との交流、授業のシーンで映り、リアルな学生生活の舞台に。',
             'latitude'  => 35.7078790,
             'longitude' => 139.4161140,
         ]);
@@ -111,7 +111,7 @@ class PostSeeder extends Seeder
             'image_path' => '',
             'place_detail' => '旧遷喬尋常小学校',
             'title' => '鈴木一平が通う学校',
-            'body' => null,
+            'body' => '昭和の雰囲気を残す建物として、小学校のシーンや町の背景に使われて、懐かしい時代感を演出していた。',
             'latitude' => 35.0777170,
             'longitude' => 133.7518250,
         ]);
@@ -128,7 +128,7 @@ class PostSeeder extends Seeder
             'image_path' => '',
             'place_detail' => '太尾見晴らしの丘公園',
             'title' => '主人公たちが訪れる公園のシーン',
-            'body' => null,
+            'body' => '広々とした公園での散歩や会話の場面、未来への不安や希望を語り合う大切な場所として登場。',
             'latitude' => 35.5324000,
             'longitude' => 139.6085000,
 
@@ -145,8 +145,8 @@ class PostSeeder extends Seeder
 
             'image_path' => '',
             'place_detail' => '彦根城',
-            'title' => '',
-            'body' => '',
+            'title' => '戦闘シーン',
+            'body' => '江戸時代の風情を残す城として、幕末の京都や各地の歴史的な舞台の代わりに登場。',
             'latitude' => 35.2755510,
             'longitude' => 136.2542770,
         ]);
@@ -163,7 +163,7 @@ class PostSeeder extends Seeder
             'image_path' => '',
             'place_detail' => '四ツ谷駅',
             'title' => '主人公がすれ違う場面',
-            'body' => '',
+            'body' => '主人公の一人が四ツ谷駅近辺の学校に通っている設定。電車に乗るシーンなどで四ツ谷駅の特徴が出ている。',
             'latitude' => 35.6862090,
             'longitude' => 139.7294260,
         ]);
@@ -180,7 +180,7 @@ class PostSeeder extends Seeder
             'image_path' => '',
             'place_detail' => '明大前駅',
             'title' => '主人公が出会うシーン',
-            'body' => '',
+            'body' => '待ち合わせしたり、歩いたりするシーンが多く、二人の青春の日常を象徴する場所に。',
             'latitude' => 35.6684170,
             'longitude' => 139.6505000,
         ]);
@@ -196,8 +196,8 @@ class PostSeeder extends Seeder
 
             'image_path' => '',
             'place_detail' => '三鷹市芸術文化センター 風のホール',
-            'title' => '',
-            'body' => '',
+            'title' => 'バンドが演奏しているホール',
+            'body' => 'ライブシーンや、メンバーが室内で過ごしている落ち着いたシーンに。',
             'latitude' => 35.6928179,
             'longitude' => 139.5582859,
         ]);
@@ -213,8 +213,8 @@ class PostSeeder extends Seeder
 
             'image_path' => '',
             'place_detail' => '太尾見晴らしの丘公園',
-            'title' => '',
-            'body' => '',
+            'title' => '考え事をしている公園',
+            'body' => '広がる景色や空が印象的',
             'latitude' => 35.5324000,
             'longitude' => 139.6085000,
         ]);
@@ -230,8 +230,8 @@ class PostSeeder extends Seeder
 
             'image_path' => '',
             'place_detail' => '信濃町駅前歩道橋',
-            'title' => '',
-            'body' => '',
+            'title' => '走ったり駆け抜けるシーン',
+            'body' => '歩道橋の上を駆け抜ける、疾走感あふれる場面に登場。',
             'latitude' => 35.6795160,
             'longitude' => 139.7197380,
         ]);
@@ -247,8 +247,8 @@ class PostSeeder extends Seeder
 
             'image_path' => '',
             'place_detail' => '駒沢公園',
-            'title' => '',
-            'body' => '',
+            'title' => '歌唱シーン',
+            'body' => '公園の緑と開放感が曲とマッチしてる。',
             'latitude' => 35.6255289,
             'longitude' => 139.6617812,
         ]);
@@ -264,8 +264,8 @@ class PostSeeder extends Seeder
 
             'image_path' => '',
             'place_detail' => '豊洲駅',
-            'title' => '',
-            'body' => '',
+            'title' => '待ち合わせのシーン',
+            'body' => '日常感と都会の空気感が感じられる場所になっている。',
             'latitude' => 35.653758,
             'longitude' => 139.795476,
         ]);
@@ -281,8 +281,8 @@ class PostSeeder extends Seeder
 
             'image_path' => '',
             'place_detail' => '鹿嶋灘海浜公園',
-            'title' => '',
-            'body' => '',
+            'title' => '菅田将暉が歩くシーン',
+            'body' => 'ひたすら菅田将暉が歩き人とすれ違う。波の音や海風が伝わる。',
             'latitude' => 36.1505955,
             'longitude' => 140.5774134,
         ]);
@@ -298,8 +298,8 @@ class PostSeeder extends Seeder
 
             'image_path' => '',
             'place_detail' => '象の鼻パーク',
-            'title' => '',
-            'body' => '',
+            'title' => '手を繋いでいるシーン。',
+            'body' => '曲名に関連していろんな人が手を繋いでいるところ。',
             'latitude' => 35.449611,
             'longitude' => 139.643173,
         ]);
@@ -315,8 +315,8 @@ class PostSeeder extends Seeder
 
             'image_path' => '',
             'place_detail' => 'ヘレナリゾートいわき ヘレナ国際ヴィラ',
-            'title' => '',
-            'body' => '',
+            'title' => '豪華な部屋やテラス',
+            'body' => '歌詞の孤独感が表れてる。',
             'latitude' => 36.946911,
             'longitude' => 140.815302,
         ]);
@@ -332,8 +332,8 @@ class PostSeeder extends Seeder
 
             'image_path' => '',
             'place_detail' => '多摩川住宅給水塔',
-            'title' => '',
-            'body' => '',
+            'title' => '高い場所から街を見渡すシーン',
+            'body' => '夜空を見上げるイメージで、夢や希望を感じさせるシンボリックな背景。',
             'latitude' => 35.637263,
             'longitude' => 139.563899,
         ]);
@@ -349,8 +349,8 @@ class PostSeeder extends Seeder
 
             'image_path' => '',
             'place_detail' => '自由学園明日館',
-            'title' => '',
-            'body' => '',
+            'title' => '想いの居場所',
+            'body' => 'MVのさまざまなところに起用。夕暮れや朝焼けの光が差し込んでとてもノスタルジックな歴史ある建物。',
             'latitude' => 35.726703,
             'longitude' => 139.707228,
         ]);

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class UserController extends Controller
 {
@@ -60,6 +61,20 @@ class UserController extends Controller
         $user->update($validated);
 
         return redirect()->route('mypage')->with('success', 'プロフィールを更新しました。');
+    }
+
+
+
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image',
+        ]);
+
+        $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+
+        // 画像URLをDBに保存
+        return response()->json(['url' => $uploadedFileUrl]);
     }
 
 

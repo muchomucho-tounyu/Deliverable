@@ -8,6 +8,7 @@ use App\Models\Place;
 use App\Models\Person;
 use App\Models\Song;
 use App\Models\Work;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class PostController extends Controller
 {
@@ -49,7 +50,6 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
-        // 空文字をnullに変換（トリムも）
         $request->merge([
             'work_name' => trim($request->input('work_name')) ?: null,
             'song_name' => trim($request->input('song_name')) ?: null,
@@ -79,7 +79,7 @@ class PostController extends Controller
             $song = Song::firstOrCreate(['name' => $data['song_name']]);
         }
 
-        // placeの作成（必須なので直接firstOrCreate）
+        // placeの作成
         $place = Place::firstOrCreate(['name' => $data['place_name']]);
 
         // 画像保存
@@ -88,7 +88,7 @@ class PostController extends Controller
             $imagePath = $request->file('image_path')->store('images', 'public');
         }
 
-        // 投稿作成。workやsongがnullの場合はidにnullを入れる（DBでnullable想定）
+        // 投稿作成
         Post::create([
             'user_id' => auth()->id(),
             'title' => $data['title'],
@@ -165,7 +165,7 @@ class PostController extends Controller
         $place->address = $data['address'];
         $place->save();
 
-        // 画像アップロード処理（あれば）
+        // 画像アップロード（あれば）
         if ($request->hasFile('image_path')) {
             $imagePath = $request->file('image_path')->store('images', 'public');
             $post->image_path = $imagePath;
@@ -177,7 +177,6 @@ class PostController extends Controller
         $post->song_id = $song?->id;
         $post->place_id = $place->id;
         $post->body = $data['body'] ?? null;
-        // $post->visited = $request->boolean('visited'); // 必要なら
         $post->save();
 
         return redirect()->route('posts.show', $post)->with('success', '投稿が更新されました。');
@@ -194,4 +193,17 @@ class PostController extends Controller
         return redirect()->route('posts.index')->with('success', '投稿が削除されました。');
     } //
 
+
+
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image',
+        ]);
+
+        $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+
+        // 画像URLをDBに保存
+        return response()->json(['url' => $uploadedFileUrl]);
+    }
 }

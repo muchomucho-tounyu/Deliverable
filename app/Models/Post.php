@@ -62,8 +62,14 @@ class Post extends Model
     {
         return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
     }
+
     public function visitedByUsers()
     {
         return $this->belongsToMany(User::class, 'visits')->withTimestamps();
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }

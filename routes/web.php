@@ -3,9 +3,11 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\VisitController;
 use App\Http\Controllers\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -23,11 +25,12 @@ Route::get('/', function () {
 });
 
 Route::resource('posts', PostController::class)->middleware('auth');
-Route::get('/posts/create', [PostController::class, 'create']);
+//Route::get('/posts/create', [PostController::class, 'create']);
 
 Route::get('/posts/{post}/edit', [PostController::class, 'edit']);
 Route::put('/posts/{post}', [PostController::class, 'update']);
 Route::delete('/posts/{post}', [PostController::class, 'delete']);
+Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
 
 Route::post('/posts/{post}/favorite', [FavoriteController::class, 'toggle'])->middleware('auth')->name('posts.favorite');
 Route::post('/posts/{post}/visit', [VisitController::class, 'toggle'])->middleware('auth')->name('posts.visit');

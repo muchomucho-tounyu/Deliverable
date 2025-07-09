@@ -31,6 +31,7 @@
     <div class="mb-6">
         <h2 class="text-xl font-semibold mb-2">❤️ お気に入り</h2>
         @forelse($user->favorites as $post)
+        <p>URL: {{ route('posts.show', $post->id) }}</p>
         <div class="border-b py-2">
             <a href="{{ route('posts.show', $post->id) }}" class="text-blue-500">{{ $post->title }}</a>
             <p class="text-sm text-gray-600">投稿者: {{ $post->user->name }}</p>

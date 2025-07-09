@@ -5,8 +5,6 @@
 @endsection
 
 @section('content')
-
-<h1>聖地作成ページ</h1>
 <!--エラーメッセージ-->
 @if ($errors->any())
 <div class="errors" style="color:red; margin-bottom:1em;">

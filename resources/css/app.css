@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.fixed-create-button {
+    @apply fixed bottom-5 right-5 w-14 h-14 text-4xl rounded-full bg-blue-600 text-white shadow-lg z-50 transition duration-300 ease-in-out flex items-center justify-center text-4xl;
+}
+
+.fixed-create-button:hover {
+    @apply bg-blue-700 scale-110;
+    transform-origin: center;
+}
+.pagination {
+    display: flex !important;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination li {
+    display: inline-block;
+}

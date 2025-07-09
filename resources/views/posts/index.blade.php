@@ -5,19 +5,9 @@
 @endsection
 
 @section('content')
-<h1>聖地リスト</h1>
 
-<form method="GET" action="{{ route('posts.index') }}">
-    <input type="text" name="keyword" placeholder="キーワードで検索" value="{{ request('keyword') }}">
-    <button type="submit">検索</button>
-
-</form>
-
-
-<br>
-<a href='/posts/create'>create</a>
-<br>
 @foreach($posts as $post)
+<br>
 <div class="post-item">
     <!-- 画像 -->
     @if($post->image_path)
@@ -69,9 +59,12 @@
             @endif
         </button>
     </form>
+    <br><br>
 </div>
 @endforeach
 
+<a href="{{ route('posts.create') }}" class="fixed-create-button" title="投稿する">＋</a>
 <!-- ページネーション -->
 {{ $posts->links() }}
+
 @endsection

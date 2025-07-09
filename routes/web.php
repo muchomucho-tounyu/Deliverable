@@ -25,7 +25,7 @@ Route::get('/', function () {
 });
 
 Route::resource('posts', PostController::class)->middleware('auth');
-//Route::get('/posts/create', [PostController::class, 'create']);
+Route::get('/search', [PostController::class, 'index'])->name('posts.search');
 
 Route::get('/posts/{post}/edit', [PostController::class, 'edit']);
 Route::put('/posts/{post}', [PostController::class, 'update']);

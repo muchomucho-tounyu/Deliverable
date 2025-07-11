@@ -57,45 +57,37 @@ class PostController extends Controller
 
         $data = $request->validate([
             'title' => 'required|string|max:255',
-
             'work_name' => 'required_without:song_name|nullable|string|max:255',
             'song_name' => 'required_without:work_name|nullable|string|max:255',
-
             'place_name' => 'required|string|max:255',
             'body' => 'nullable|string',
             'visited' => 'nullable|boolean',
-            'image_path' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:2048',
         ]);
 
-        // workの作成 or null
         $work = null;
         if (!empty($data['work_name'])) {
             $work = Work::firstOrCreate(['name' => $data['work_name']]);
         }
-
-        // songの作成 or null
         $song = null;
         if (!empty($data['song_name'])) {
             $song = Song::firstOrCreate(['name' => $data['song_name']]);
         }
-
-        // placeの作成
         $place = Place::firstOrCreate(['name' => $data['place_name']]);
 
-        // 画像保存
-        $imagePath = null;
-        if ($request->hasFile('image_path')) {
-            $imagePath = $request->file('image_path')->store('images', 'public');
+        // Cloudinary画像アップロード
+        $imageUrl = null;
+        if ($request->hasFile('image')) {
+            $imageUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
         }
 
-        // 投稿作成
         Post::create([
             'user_id' => auth()->id(),
             'title' => $data['title'],
             'work_id' => $work?->id,
             'song_id' => $song?->id,
             'place_id' => $place->id,
-            'image_path' => $imagePath,
+            'image' => $imageUrl,
             'body' => $data['body'],
             'visited' => $request->boolean('visited'),
         ]);
@@ -135,7 +127,6 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        // バリデーション
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'work_name' => 'nullable|string|max:255',
@@ -143,35 +134,27 @@ class PostController extends Controller
             'place_name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'body' => 'nullable|string',
-            'image_path' => 'nullable|image|max:2048',
-
+            'image' => 'nullable|image|max:2048',
         ]);
 
-        // work更新 or 作成
         $work = null;
         if (!empty($data['work_name'])) {
             $work = Work::firstOrCreate(['name' => $data['work_name']]);
         }
-
-        // song更新 or 作成
         $song = null;
         if (!empty($data['song_name'])) {
             $song = Song::firstOrCreate(['name' => $data['song_name']]);
         }
-
-        // place更新 or 作成
         $place = Place::firstOrCreate(['name' => $data['place_name']]);
-        // addressはPlaceモデルに保存するならここで更新してね
         $place->address = $data['address'];
         $place->save();
 
-        // 画像アップロード（あれば）
-        if ($request->hasFile('image_path')) {
-            $imagePath = $request->file('image_path')->store('images', 'public');
-            $post->image_path = $imagePath;
+        // Cloudinary画像アップロード（あれば）
+        if ($request->hasFile('image')) {
+            $imageUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+            $post->image = $imageUrl;
         }
 
-        // Postモデル更新
         $post->title = $data['title'];
         $post->work_id = $work?->id;
         $post->song_id = $song?->id;

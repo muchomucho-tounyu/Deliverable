@@ -8,6 +8,16 @@
 
 <h1>{{ $post->title }}</h1>
 
+@if ($post->image)
+<div style="margin-bottom: 1em;">
+    <img src="{{ $post->image }}" alt="投稿画像" style="max-width: 100%; height: auto;">
+</div>
+@elseif ($post->image_path)
+<div style="margin-bottom: 1em;">
+    <img src="{{ $post->image_path }}" alt="投稿画像" style="max-width: 100%; height: auto;">
+</div>
+@endif
+
 @if ($post->work)
 <p><strong>作品名：</strong>{{ $post->work->name }}</p>
 @endif

@@ -49,10 +49,10 @@
     <br>
     <br>
 
-    <label>画像</label>
-    <input type="file" name="image_path">
-    <br>
-    <br>
+    <div>
+        <label for="image">画像アップロード：</label>
+        <input type="file" name="image" id="image" accept="image/*">
+    </div>
 
     <label>コメント：</label>
     <textarea name="body" rows="4"></textarea>

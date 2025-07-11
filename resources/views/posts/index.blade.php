@@ -10,7 +10,9 @@
 <br>
 <div class="post-item">
     <!-- 画像 -->
-    @if($post->image_path)
+    @if($post->image)
+    <img src="{{ $post->image }}" alt="投稿画像" style="max-width: 200px;">
+    @elseif($post->image_path)
     <img src="{{ asset('storage/' . $post->image_path) }}" alt="投稿画像" style="max-width: 200px;">
     @endif
 

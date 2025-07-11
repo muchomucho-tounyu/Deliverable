@@ -13,7 +13,7 @@
     <body>
         <h1 class="title">編集画面</h1>
         <div class="content">
-            <form action="/posts/{{ $post->id }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('posts.update', $post) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 

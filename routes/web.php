@@ -7,6 +7,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\VisitController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\MapController;
 
 
 /*
@@ -44,6 +45,8 @@ Route::post('/users/{user}/follow', [UserController::class, 'follow'])->middlewa
 Route::delete('/users/{user}/unfollow', [UserController::class, 'unfollow'])->middleware('auth')->name('user.unfollow');
 Route::get('/mypage/{id}/edit', [UserController::class, 'edit'])->name('mypage.edit');
 Route::put('/mypage', [UserController::class, 'update'])->name('user.update');
+
+Route::get('/map', [\App\Http\Controllers\MapController::class, 'index'])->name('map');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');

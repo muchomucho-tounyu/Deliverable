@@ -47,9 +47,9 @@ class UserController extends Controller
         ]);
 
         // プロフィール画像アップロード
-        if ($request->hasFile('image') && $request->file('image') !== null) {
-            // Cloudinaryにアップロード
-            $imageUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+        $file = $request->file('image');
+        if ($file && $file->isValid() && $file->getRealPath() && $file->getSize() > 0) {
+            $imageUrl = Cloudinary::upload($file->getRealPath())->getSecurePath();
             $validated['image'] = $imageUrl;
         }
 

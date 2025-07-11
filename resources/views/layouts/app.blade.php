@@ -16,13 +16,6 @@
 </head>
 
 <body class="antialiased font-kawaii">
-    @if(Auth::check())
-    <div style="position: absolute; top: 1rem; right: 1rem; z-index: 1000;">
-        <img src="{{ Auth::user()->image ?? asset('images/default-user.png') }}"
-            alt="ユーザーアイコン"
-            style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid #ccc;">
-    </div>
-    @endif
     <div class="min-h-screen bg-gray-100">
         @include('layouts.navigation')
 

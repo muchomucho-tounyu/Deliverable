@@ -5,6 +5,7 @@
     <h1 class="text-2xl font-bold mb-6">{{ $user->name }} さんのマイページ</h1>
 
     <div class="bg-white rounded shadow p-6 mb-6">
+        @if(request()->query('edit') == 1)
         <form action="{{ route('user.update') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
             @method('PUT')
@@ -37,7 +38,33 @@
                 @endif
             </div>
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">保存</button>
+            <a href="{{ route('mypage') }}" class="ml-4 text-gray-600 underline">キャンセル</a>
         </form>
+        @else
+        <div class="flex items-center space-x-4 mb-4">
+            @if($user->image)
+            <img src="{{ $user->image }}" alt="プロフィール画像" style="width:80px; height:80px; border-radius:50%;">
+            @endif
+            <div>
+                <p><strong>名前:</strong> {{ $user->name }}</p>
+                <p><strong>メール:</strong> {{ $user->email }}</p>
+                <p><strong>年齢:</strong> {{ $user->age ?? '未設定' }}</p>
+                <p><strong>性別:</strong>
+                    @if($user->sex === 'male')
+                    男性
+                    @elseif($user->sex === 'female')
+                    女性
+                    @elseif($user->sex === 'other')
+                    その他
+                    @else
+                    未設定
+                    @endif
+                </p>
+                <p><strong>登録日:</strong> {{ $user->created_at->format('Y年m月d日') }}</p>
+            </div>
+        </div>
+        <a href="{{ route('mypage', ['edit' => 1]) }}" class="bg-blue-500 text-white px-4 py-2 rounded">編集</a>
+        @endif
         <form action="{{ route('logout') }}" method="POST" class="mt-4">
             @csrf
             <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">ログアウト</button>

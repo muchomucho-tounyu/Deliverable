@@ -47,14 +47,10 @@ class UserController extends Controller
         ]);
 
         // プロフィール画像アップロード
-        if ($request->hasFile('image')) {
-            // 古い画像があれば削除
-            if ($user->image) {
-                Storage::delete($user->image);
-            }
-
-            $path = $request->file('image')->store('profile_images');
-            $validated['image'] = $path;
+        if ($request->hasFile('image') && $request->file('image') !== null) {
+            // Cloudinaryにアップロード
+            $imageUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+            $validated['image'] = $imageUrl;
         }
 
         // 更新

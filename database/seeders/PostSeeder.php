@@ -258,7 +258,6 @@ class PostSeeder extends Seeder
         ]);
 
         $post15->people()->attach([12]);
-        $post15->places()->attach([14]);
 
         $post16 = Post::create([
             'user_id' => 1,

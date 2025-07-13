@@ -28,6 +28,7 @@ class Post extends Model
         'image',
         'body',
         'user_id',
+        'place',
 
 
     ];

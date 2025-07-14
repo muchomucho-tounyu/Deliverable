@@ -35,23 +35,24 @@
 
                 <!-- Settings Dropdown -->
                 <div class="hidden sm:flex sm:items-center sm:ms-6">
-                    <a href="{{ route('mypage') }}">
-                        @if(Auth::user()->image)
+                    <a href="{{ route('mypage') }}" class="flex items-center">
+                        @if(Auth::user()->image && Auth::user()->image !== 'null')
                         @if(str_starts_with(Auth::user()->image, 'http'))
-                        <img src="{{ Auth::user()->image }}" alt="ユーザーアイコン" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #ccc;">
+                        <img src="{{ Auth::user()->image }}" alt="ユーザーアイコン"
+                            class="w-8 h-8 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
                         @else
-                        <img src="{{ asset(Auth::user()->image) }}" alt="ユーザーアイコン" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #ccc;">
+                        <img src="{{ asset(Auth::user()->image) }}" alt="ユーザーアイコン"
+                            class="w-8 h-8 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
                         @endif
                         @else
-                        <img src="{{ asset('images/default-user.png') }}" alt="ユーザーアイコン" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #ccc;">
+                        <!-- デフォルトのユーザーアイコン（SVG） -->
+                        <div class="w-8 h-8 rounded-full bg-gray-200 border-2 border-gray-300 hover:border-blue-300 transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
                         @endif
                     </a>
-                    <!-- デバッグ用：画像パスを表示 -->
-                    @if(config('app.debug'))
-                    <div style="font-size: 10px; color: red;">
-                        Debug: {{ Auth::user()->image ?? 'null' }}
-                    </div>
-                    @endif
                 </div>
 
                 <!-- Hamburger -->

@@ -13,7 +13,7 @@ class MapController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Post::with(['user', 'places', 'people', 'works', 'songs']);
+        $query = Post::with(['user', 'places', 'people', 'works', 'songs'])->whereNotNull('latitude')->whereNotNull('longitude');
 
         // キーワード検索
         if ($request->filled('keyword')) {
@@ -75,19 +75,19 @@ class MapController extends Controller
         // 検索結果の統計
         $stats = [
             'total' => $posts->count(),
-            'places' => $posts->filter(function ($post) {
-                return $post->places->count() > 0;
-            })->count(),
-            'people' => $posts->filter(function ($post) {
-                return $post->people->count() > 0;
-            })->count(),
-            'works' => $posts->filter(function ($post) {
-                return $post->works->count() > 0;
-            })->count(),
-            'songs' => $posts->filter(function ($post) {
-                return $post->songs->count() > 0;
-            })->count(),
+            'places' => 0,
+            'people' => 0,
+            'works' => 0,
+            'songs' => 0,
         ];
+
+        // 各カテゴリの統計を計算
+        foreach ($posts as $post) {
+            if ($post->places && $post->places->count() > 0) $stats['places']++;
+            if ($post->people && $post->people->count() > 0) $stats['people']++;
+            if ($post->works && $post->works->count() > 0) $stats['works']++;
+            if ($post->songs && $post->songs->count() > 0) $stats['songs']++;
+        }
 
         return view('map', compact('posts', 'googleMapsApiKey', 'stats'));
     }

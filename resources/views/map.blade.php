@@ -6,10 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>聖地巡礼マップ</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card-shadow {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
         #map {
             width: 100%;
             height: 600px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
 
         .search-overlay {
@@ -26,106 +58,240 @@
 
         .marker-info {
             background: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            max-width: 200px;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            max-width: 250px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .marker-label {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(74, 222, 128, 0.3);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .post-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border-color: rgba(102, 126, 234, 0.2);
+        }
+
+        .nav-link {
+            color: #4b5563;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            #map {
+                height: 400px;
+            }
+
+            .search-form {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
         }
     </style>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gradient-to-br from-blue-400 to-purple-600 min-h-screen">
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-3xl font-bold text-center mb-6">聖地巡礼マップ</h1>
+        <!-- ヘッダー -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
+                聖地巡礼マップ
+            </h1>
+            <p class="text-white/80 text-lg max-w-2xl mx-auto">
+                アニメ・映画・ドラマの聖地を地図上で発見し、あなたの思い出を共有しましょう
+            </p>
+        </div>
 
         <!-- 検索フォーム -->
-        <div class="mb-6 bg-white rounded-lg shadow-md p-6">
-            <form id="searchForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="glass-effect card-shadow rounded-2xl p-6 mb-8">
+            <form id="searchForm" class="search-form grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">キーワード検索</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">🔍 キーワード検索</label>
                     <input type="text" name="keyword" id="keyword" placeholder="タイトル、場所、人物名など"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="input-field w-full">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">カテゴリ</label>
-                    <select name="category" id="category" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">📂 カテゴリ</label>
+                    <select name="category" id="category" class="input-field w-full">
                         <option value="">すべて</option>
-                        <option value="places">場所</option>
-                        <option value="people">人物</option>
-                        <option value="works">作品</option>
-                        <option value="songs">楽曲</option>
+                        <option value="places">🏛️ 場所</option>
+                        <option value="people">👥 人物</option>
+                        <option value="works">🎬 作品</option>
+                        <option value="songs">🎵 楽曲</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">現在地から検索</label>
-                    <button type="button" id="currentLocation" class="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
-                        現在地を取得
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">📍 現在地から検索</label>
+                    <button type="button" id="currentLocation" class="btn-secondary w-full">
+                        📍 現在地を取得
                     </button>
                 </div>
 
                 <div class="flex items-end">
-                    <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        検索
+                    <button type="submit" class="btn-primary w-full">
+                        🔍 検索
                     </button>
                 </div>
             </form>
         </div>
 
         <!-- 検索結果統計 -->
-        <div id="searchStats" class="mb-4 bg-white rounded-lg shadow-md p-4">
+        <div id="searchStats" class="stats-card mb-6">
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-                <div>
-                    <div class="text-2xl font-bold text-blue-600">{{ $stats['total'] ?? 0 }}</div>
-                    <div class="text-sm text-gray-600">総投稿数</div>
+                <div class="hover-lift">
+                    <div class="text-3xl font-bold gradient-text">{{ $stats['total'] ?? 0 }}</div>
+                    <div class="text-sm text-gray-600 font-medium">総投稿数</div>
                 </div>
-                <div>
-                    <div class="text-2xl font-bold text-green-600">{{ $stats['places'] ?? 0 }}</div>
-                    <div class="text-sm text-gray-600">場所</div>
+                <div class="hover-lift">
+                    <div class="text-3xl font-bold text-green-600">{{ $stats['places'] ?? 0 }}</div>
+                    <div class="text-sm text-gray-600 font-medium">🏛️ 場所</div>
                 </div>
-                <div>
-                    <div class="text-2xl font-bold text-purple-600">{{ $stats['people'] ?? 0 }}</div>
-                    <div class="text-sm text-gray-600">人物</div>
+                <div class="hover-lift">
+                    <div class="text-3xl font-bold text-purple-600">{{ $stats['people'] ?? 0 }}</div>
+                    <div class="text-sm text-gray-600 font-medium">👥 人物</div>
                 </div>
-                <div>
-                    <div class="text-2xl font-bold text-orange-600">{{ $stats['works'] ?? 0 }}</div>
-                    <div class="text-sm text-gray-600">作品</div>
+                <div class="hover-lift">
+                    <div class="text-3xl font-bold text-orange-600">{{ $stats['works'] ?? 0 }}</div>
+                    <div class="text-sm text-gray-600 font-medium">🎬 作品</div>
                 </div>
-                <div>
-                    <div class="text-2xl font-bold text-red-600">{{ $stats['songs'] ?? 0 }}</div>
-                    <div class="text-sm text-gray-600">楽曲</div>
+                <div class="hover-lift">
+                    <div class="text-3xl font-bold text-red-600">{{ $stats['songs'] ?? 0 }}</div>
+                    <div class="text-sm text-gray-600 font-medium">🎵 楽曲</div>
                 </div>
             </div>
         </div>
 
         <!-- マップ -->
-        <div class="relative">
-            <div id="map" class="rounded-lg shadow-lg"></div>
+        <div class="relative mb-8">
+            <div id="map" class="card-shadow"></div>
         </div>
 
         <!-- 検索結果リスト -->
-        <div id="searchResults" class="mt-6 bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-bold mb-4">検索結果</h2>
-            <div id="resultsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div id="searchResults" class="glass-effect card-shadow rounded-2xl p-6">
+            <h2 class="text-2xl font-bold mb-6 gradient-text">📋 検索結果</h2>
+            <div id="resultsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($posts as $post)
-                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <h3 class="font-bold text-lg mb-2">{{ $post->title }}</h3>
-                    <p class="text-gray-600 text-sm mb-2">{{ Str::limit($post->content, 100) }}</p>
-                    <div class="text-xs text-gray-500 mb-2">
-                        <span class="font-medium">投稿者:</span> {{ $post->user->name }}
+                <div class="post-card hover-lift">
+                    <h3 class="font-bold text-xl mb-3 text-gray-800">{{ $post->title }}</h3>
+                    <p class="text-gray-600 text-sm mb-3 leading-relaxed">{{ Str::limit($post->content, 120) }}</p>
+                    <div class="text-xs text-gray-500 mb-3">
+                        <span class="font-medium">👤 投稿者:</span> {{ $post->user->name }}
                     </div>
                     @if($post->places->count() > 0)
-                    <div class="text-xs text-gray-500 mb-1">
-                        <span class="font-medium">場所:</span> {{ $post->places->pluck('name')->implode(', ') }}
+                    <div class="text-xs text-gray-500 mb-2">
+                        <span class="font-medium">🏛️ 場所:</span> {{ $post->places->pluck('name')->implode(', ') }}
                     </div>
                     @endif
                     @if($post->people->count() > 0)
-                    <div class="text-xs text-gray-500 mb-1">
-                        <span class="font-medium">人物:</span> {{ $post->people->pluck('name')->implode(', ') }}
+                    <div class="text-xs text-gray-500 mb-3">
+                        <span class="font-medium">👥 人物:</span> {{ $post->people->pluck('name')->implode(', ') }}
                     </div>
                     @endif
-                    <a href="{{ route('posts.show', $post->id) }}" class="text-blue-500 hover:text-blue-700 text-sm">詳細を見る</a>
+                    <a href="{{ route('posts.show', $post->id) }}" class="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-300">
+                        📖 詳細を見る
+                    </a>
                 </div>
                 @endforeach
             </div>
@@ -149,8 +315,16 @@
             };
 
             map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 8,
-                center: center
+                zoom: 10,
+                center: center,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                styles: [{
+                    featureType: 'poi',
+                    elementType: 'labels',
+                    stylers: [{
+                        visibility: 'off'
+                    }]
+                }]
             });
 
             // 初期マーカーを表示
@@ -159,34 +333,70 @@
 
         function displayMarkers(posts) {
             // 既存のマーカーを削除
-            markers.forEach(marker => marker.setMap(null));
+            markers.forEach(function(marker) {
+                marker.setMap(null);
+            });
             markers = [];
 
-            posts.forEach(post => {
+            posts.forEach(function(post) {
                 if (post.latitude && post.longitude) {
+                    // カスタムマーカーアイコン（iPhone風のピン）
+                    const markerIcon = {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 8,
+                        fillColor: '#667eea',
+                        fillOpacity: 0.9,
+                        strokeColor: '#FFFFFF',
+                        strokeWeight: 2
+                    };
+
                     const marker = new google.maps.Marker({
                         position: {
                             lat: parseFloat(post.latitude),
                             lng: parseFloat(post.longitude)
                         },
                         map: map,
-                        title: post.title || ''
+                        title: post.title || '',
+                        icon: markerIcon,
+                        label: {
+                            text: post.title || '投稿',
+                            className: 'marker-label',
+                            color: '#333333'
+                        }
                     });
 
                     // 情報ウィンドウを作成
                     const infoWindow = new google.maps.InfoWindow({
                         content: `
                             <div class="marker-info">
-                                <h3 class="font-bold">${post.title || 'タイトルなし'}</h3>
-                                <p class="text-sm text-gray-600">${post.content ? post.content.substring(0, 100) + '...' : ''}</p>
-                                <p class="text-xs text-gray-500">投稿者: ${post.user ? post.user.name : '不明'}</p>
-                                <a href="/posts/${post.id}" class="text-blue-500 hover:text-blue-700 text-sm">詳細を見る</a>
+                                <h3 class="font-bold text-lg mb-2 text-gray-800">${post.title || 'タイトルなし'}</h3>
+                                <p class="text-sm text-gray-600 mb-2">${post.content ? post.content.substring(0, 100) + '...' : ''}</p>
+                                <p class="text-xs text-gray-500 mb-2">👤 投稿者: ${post.user ? post.user.name : '不明'}</p>
+                                <div class="flex justify-between items-center">
+                                    <a href="/posts/${post.id}" class="text-blue-500 hover:text-blue-700 text-sm font-medium">📖 詳細を見る</a>
+                                    <span class="text-xs text-gray-400">${post.places ? post.places.join(', ') : ''}</span>
+                                </div>
                             </div>
                         `
                     });
 
+                    // クリックで情報ウィンドウを表示
                     marker.addListener('click', function() {
                         infoWindow.open(map, marker);
+                    });
+
+                    // ズームレベルに応じてラベルを表示/非表示
+                    google.maps.event.addListener(map, 'zoom_changed', function() {
+                        const zoom = map.getZoom();
+                        if (zoom >= 12) {
+                            marker.setLabel({
+                                text: post.title || '投稿',
+                                className: 'marker-label',
+                                color: '#333333'
+                            });
+                        } else {
+                            marker.setLabel(null);
+                        }
                     });
 
                     markers.push(marker);
@@ -272,65 +482,75 @@
         }
 
         function updateSearchResults(posts) {
-            const resultsList = document.getElementById('resultsList');
+            var resultsList = document.getElementById('resultsList');
             resultsList.innerHTML = '';
 
-            posts.forEach(post => {
+            posts.forEach(function(post) {
                 const postElement = document.createElement('div');
-                postElement.className = 'border rounded-lg p-4 hover:shadow-md transition-shadow';
+                postElement.className = 'post-card hover-lift';
                 postElement.innerHTML = `
-                    <h3 class="font-bold text-lg mb-2">${post.title || 'タイトルなし'}</h3>
-                    <p class="text-gray-600 text-sm mb-2">${post.content ? post.content.substring(0, 100) + '...' : ''}</p>
-                    <div class="text-xs text-gray-500 mb-2">
-                        <span class="font-medium">投稿者:</span> ${post.user || '不明'}
+                    <h3 class="font-bold text-xl mb-3 text-gray-800">${post.title || 'タイトルなし'}</h3>
+                    <p class="text-gray-600 text-sm mb-3 leading-relaxed">${post.content ? post.content.substring(0, 120) + '...' : ''}</p>
+                    <div class="text-xs text-gray-500 mb-3">
+                        <span class="font-medium">👤 投稿者:</span> ${post.user || '不明'}
                     </div>
                     ${post.places && post.places.length > 0 ? `
-                        <div class="text-xs text-gray-500 mb-1">
-                            <span class="font-medium">場所:</span> ${post.places.join(', ')}
+                        <div class="text-xs text-gray-500 mb-2">
+                            <span class="font-medium">🏛️ 場所:</span> ${post.places.join(', ')}
                         </div>
                     ` : ''}
                     ${post.people && post.people.length > 0 ? `
-                        <div class="text-xs text-gray-500 mb-1">
-                            <span class="font-medium">人物:</span> ${post.people.join(', ')}
+                        <div class="text-xs text-gray-500 mb-3">
+                            <span class="font-medium">👥 人物:</span> ${post.people.join(', ')}
                         </div>
                     ` : ''}
-                    <a href="${post.url}" class="text-blue-500 hover:text-blue-700 text-sm">詳細を見る</a>
+                    <a href="${post.url}" class="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-300">
+                        📖 詳細を見る
+                    </a>
                 `;
                 resultsList.appendChild(postElement);
             });
         }
 
         function updateStats(posts) {
-            const stats = {
+            var stats = {
                 total: posts.length,
-                places: posts.filter(p => p.places && p.places.length > 0).length,
-                people: posts.filter(p => p.people && p.people.length > 0).length,
-                works: posts.filter(p => p.works && p.works.length > 0).length,
-                songs: posts.filter(p => p.songs && p.songs.length > 0).length
+                places: posts.filter(function(p) {
+                    return p.places && p.places.length > 0;
+                }).length,
+                people: posts.filter(function(p) {
+                    return p.people && p.people.length > 0;
+                }).length,
+                works: posts.filter(function(p) {
+                    return p.works && p.works.length > 0;
+                }).length,
+                songs: posts.filter(function(p) {
+                    return p.songs && p.songs.length > 0;
+                }).length
             };
 
             const statsElement = document.getElementById('searchStats');
             statsElement.innerHTML = `
                 <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-                    <div>
-                        <div class="text-2xl font-bold text-blue-600">${stats.total}</div>
-                        <div class="text-sm text-gray-600">総投稿数</div>
+                    <div class="hover-lift">
+                        <div class="text-3xl font-bold gradient-text">${stats.total}</div>
+                        <div class="text-sm text-gray-600 font-medium">総投稿数</div>
                     </div>
-                    <div>
-                        <div class="text-2xl font-bold text-green-600">${stats.places}</div>
-                        <div class="text-sm text-gray-600">場所</div>
+                    <div class="hover-lift">
+                        <div class="text-3xl font-bold text-green-600">${stats.places}</div>
+                        <div class="text-sm text-gray-600 font-medium">🏛️ 場所</div>
                     </div>
-                    <div>
-                        <div class="text-2xl font-bold text-purple-600">${stats.people}</div>
-                        <div class="text-sm text-gray-600">人物</div>
+                    <div class="hover-lift">
+                        <div class="text-3xl font-bold text-purple-600">${stats.people}</div>
+                        <div class="text-sm text-gray-600 font-medium">👥 人物</div>
                     </div>
-                    <div>
-                        <div class="text-2xl font-bold text-orange-600">${stats.works}</div>
-                        <div class="text-sm text-gray-600">作品</div>
+                    <div class="hover-lift">
+                        <div class="text-3xl font-bold text-orange-600">${stats.works}</div>
+                        <div class="text-sm text-gray-600 font-medium">🎬 作品</div>
                     </div>
-                    <div>
-                        <div class="text-2xl font-bold text-red-600">${stats.songs}</div>
-                        <div class="text-sm text-gray-600">楽曲</div>
+                    <div class="hover-lift">
+                        <div class="text-3xl font-bold text-red-600">${stats.songs}</div>
+                        <div class="text-sm text-gray-600 font-medium">🎵 楽曲</div>
                     </div>
                 </div>
             `;

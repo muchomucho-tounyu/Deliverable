@@ -33,9 +33,15 @@
                 <!-- Settings Dropdown -->
                 <div class="hidden sm:flex sm:items-center sm:ms-6">
                     <a href="{{ route('mypage') }}">
-                        <img src="{{ Auth::user()->image ?? asset('images/default-user.png') }}"
-                            alt="ユーザーアイコン"
-                            style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #ccc;">
+                        @if(Auth::user()->image)
+                        @if(str_starts_with(Auth::user()->image, 'http'))
+                        <img src="{{ Auth::user()->image }}" alt="ユーザーアイコン" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #ccc;">
+                        @else
+                        <img src="{{ asset(Auth::user()->image) }}" alt="ユーザーアイコン" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #ccc;">
+                        @endif
+                        @else
+                        <img src="{{ asset('images/default-user.png') }}" alt="ユーザーアイコン" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #ccc;">
+                        @endif
                     </a>
                 </div>
 

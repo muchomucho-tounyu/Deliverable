@@ -11,7 +11,11 @@
 <div class="post-item">
     <!-- 画像 -->
     @if($post->image)
+    @if(str_starts_with($post->image, 'http'))
     <img src="{{ $post->image }}" alt="投稿画像" style="max-width: 200px;">
+    @else
+    <img src="{{ asset($post->image) }}" alt="投稿画像" style="max-width: 200px;">
+    @endif
     @elseif($post->image_path)
     <img src="{{ asset('storage/' . $post->image_path) }}" alt="投稿画像" style="max-width: 200px;">
     @endif

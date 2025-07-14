@@ -46,11 +46,12 @@ class UserController extends Controller
             'image' => ['nullable', 'image', 'max:2048'],
         ]);
 
-        // プロフィール画像アップロード
+        // プロフィール画像アップロード（一時的にローカルストレージに変更）
         $file = $request->file('image');
         if ($file && $file->isValid() && $file->getRealPath() && $file->getSize() > 0) {
-            $imageUrl = Cloudinary::upload($file->getRealPath())->getSecurePath();
-            $validated['image'] = $imageUrl;
+            // 一時的にローカルストレージに保存
+            $path = $file->store('profile_images', 'public');
+            $validated['image'] = '/storage/' . $path;
         }
 
         // 更新
@@ -59,19 +60,6 @@ class UserController extends Controller
         return redirect()->route('mypage')->with('success', 'プロフィールを更新しました。');
     }
 
-
-
-    public function upload(Request $request)
-    {
-        $request->validate([
-            'image' => 'required|image',
-        ]);
-
-        $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
-
-        // 画像URLをDBに保存
-        return response()->json(['url' => $uploadedFileUrl]);
-    }
 
 
     public function follow(User $user)

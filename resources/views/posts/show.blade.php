@@ -9,9 +9,15 @@
 <h1>{{ $post->title }}</h1>
 
 @if ($post->image)
+@if(str_starts_with($post->image, 'http'))
 <div style="margin-bottom: 1em;">
     <img src="{{ $post->image }}" alt="投稿画像" style="max-width: 100%; height: auto;">
 </div>
+@else
+<div style="margin-bottom: 1em;">
+    <img src="{{ asset($post->image) }}" alt="投稿画像" style="max-width: 100%; height: auto;">
+</div>
+@endif
 @elseif ($post->image_path)
 <div style="margin-bottom: 1em;">
     <img src="{{ $post->image_path }}" alt="投稿画像" style="max-width: 100%; height: auto;">

@@ -21,18 +21,32 @@ class PostController extends Controller
 
         $query = Post::with(['user', 'work', 'song', 'place', 'people']);
         if (!empty($keyword)) {
-            $query->where('title', 'like', "%{$keyword}%")
-                ->orWhereHas('user', fn($q) => $q->where('name', 'like', "%{$keyword}%"))
-                ->orWhereHas('work', fn($q) => $q->where('name', 'like', "%{$keyword}%"))
-                ->orWhereHas('song', fn($q) => $q->where('name', 'like', "%{$keyword}%"))
-                ->orWhereHas('place', fn($q) => $q->where('name', 'like', "%{$keyword}%"))
-                ->orWhereHas('people', fn($q) => $q->where('name', 'like', "%{$keyword}%"));
+            $query->where(function ($q) use ($keyword) {
+                $q->where('title', 'like', "%{$keyword}%")
+                    ->orWhereHas('user', function ($subQ) use ($keyword) {
+                        $subQ->where('name', 'like', "%{$keyword}%");
+                    })
+                    ->orWhereHas('work', function ($subQ) use ($keyword) {
+                        $subQ->where('name', 'like', "%{$keyword}%");
+                    })
+                    ->orWhereHas('song', function ($subQ) use ($keyword) {
+                        $subQ->where('name', 'like', "%{$keyword}%");
+                    })
+                    ->orWhereHas('place', function ($subQ) use ($keyword) {
+                        $subQ->where('name', 'like', "%{$keyword}%");
+                    })
+                    ->orWhereHas('people', function ($subQ) use ($keyword) {
+                        $subQ->where('name', 'like', "%{$keyword}%");
+                    });
+            });
         }
 
         $posts = $query->orderBy('updated_at', 'desc')->paginate(10);
 
+        // デバッグ用：投稿数をログ出力
+        \Log::info('投稿数: ' . $posts->count() . ', 総投稿数: ' . Post::count());
 
-        return view('posts.index', compact('posts')); //
+        return view('posts.index', compact('posts'));
     }
 
 

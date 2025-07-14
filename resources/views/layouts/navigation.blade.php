@@ -17,6 +17,9 @@
                     <x-nav-link :href="route('mypage')" :active="request()->routeIs('mypage')">
                         {{ __('Mypage') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('map')" :active="request()->routeIs('map')">
+                        {{ __('マップで検索') }}
+                    </x-nav-link>
                 </div>
             </div>
             <!-- 右側：検索ボックス -->
@@ -79,6 +82,9 @@
                 <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('mypage')">
                         {{ __('Mypage') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('map')">
+                        {{ __('マップで検索') }}
                     </x-responsive-nav-link>
 
                     <!-- Authentication -->

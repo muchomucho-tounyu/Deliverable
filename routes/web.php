@@ -47,6 +47,7 @@ Route::get('/mypage/{id}/edit', [UserController::class, 'edit'])->name('mypage.e
 Route::put('/mypage', [UserController::class, 'update'])->name('user.update');
 
 Route::get('/map', [\App\Http\Controllers\MapController::class, 'index'])->name('map');
+Route::get('/map/search', [\App\Http\Controllers\MapController::class, 'search'])->name('map.search');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');

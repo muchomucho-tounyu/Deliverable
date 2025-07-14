@@ -46,12 +46,15 @@ class UserController extends Controller
             'image' => ['nullable', 'image', 'max:2048'],
         ]);
 
-        // プロフィール画像アップロード（一時的にローカルストレージに変更）
+        // プロフィール画像アップロード（ローカルストレージ）
         $file = $request->file('image');
         if ($file && $file->isValid() && $file->getRealPath() && $file->getSize() > 0) {
-            // 一時的にローカルストレージに保存
+            // ローカルストレージに保存
             $path = $file->store('profile_images', 'public');
             $validated['image'] = '/storage/' . $path;
+
+            // デバッグ用：画像パスをログ出力
+            \Log::info('画像パス: ' . $validated['image']);
         }
 
         // 更新

@@ -43,6 +43,12 @@
                         <img src="{{ asset('images/default-user.png') }}" alt="ユーザーアイコン" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:1px solid #ccc;">
                         @endif
                     </a>
+                    <!-- デバッグ用：画像パスを表示 -->
+                    @if(config('app.debug'))
+                    <div style="font-size: 10px; color: red;">
+                        Debug: {{ Auth::user()->image ?? 'null' }}
+                    </div>
+                    @endif
                 </div>
 
                 <!-- Hamburger -->

@@ -46,15 +46,17 @@ class UserController extends Controller
             'image' => ['nullable', 'image', 'max:2048'],
         ]);
 
-        // プロフィール画像アップロード（Cloudinary）
-        $file = $request->file('image');
-        if ($file && $file->isValid() && $file->getRealPath() && $file->getSize() > 0) {
-            try {
-                $imageUrl = Cloudinary::upload($file->getRealPath())->getSecurePath();
-                $validated['image'] = $imageUrl;
-                \Log::info('Cloudinary画像URL: ' . $imageUrl);
-            } catch (\Exception $e) {
-                \Log::error('Cloudinaryアップロードエラー: ' . $e->getMessage());
+        // プロフィール画像アップロード（画像が選択された場合のみ）
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            if ($file && $file->isValid() && $file->getRealPath() && $file->getSize() > 0) {
+                try {
+                    $imageUrl = Cloudinary::upload($file->getRealPath())->getSecurePath();
+                    $validated['image'] = $imageUrl;
+                    \Log::info('Cloudinary画像URL: ' . $imageUrl);
+                } catch (\Exception $e) {
+                    \Log::error('Cloudinaryアップロードエラー: ' . $e->getMessage());
+                }
             }
         }
 

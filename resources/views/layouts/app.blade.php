@@ -29,7 +29,7 @@
         @endif
 
         <!-- Page Content -->
-        <main class="px-4 sm:px-6 lg:px-8">
+        <main class="px-4 sm:px-6 lg:px-8 pt-16">
             @yield('content')
         </main>
     </div>

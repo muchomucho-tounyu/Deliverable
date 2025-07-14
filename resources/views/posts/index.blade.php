@@ -4,6 +4,10 @@
 <h1>聖地一覧</h1>
 @endsection
 
+@php
+use Illuminate\Support\Str;
+@endphp
+
 @section('content')
 
 <style>
@@ -132,12 +136,10 @@
 @foreach($posts as $post)
 <div class="post-item">
     <!-- 画像 -->
-    @if($post->image)
-    @if(str_starts_with($post->image, 'http'))
+    @if(Str::startsWith($post->image, ['http://', 'https://']))
     <img src="{{ $post->image }}" alt="投稿画像" class="post-image">
-    @else
+    @elseif($post->image)
     <img src="{{ asset($post->image) }}" alt="投稿画像" class="post-image">
-    @endif
     @elseif($post->image_path)
     <img src="{{ asset('storage/' . $post->image_path) }}" alt="投稿画像" class="post-image">
     @endif

@@ -19,6 +19,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'testuser',
                 'password' => Hash::make('password'),
+                'image' => 'https://res.cloudinary.com/ddmyych6n/image/upload/v1752475262/animal_melt4_hamster_besv3f.png',
             ]
         );
     }

@@ -75,10 +75,18 @@ class MapController extends Controller
         // 検索結果の統計
         $stats = [
             'total' => $posts->count(),
-            'places' => $posts->whereNotNull('places')->count(),
-            'people' => $posts->whereNotNull('people')->count(),
-            'works' => $posts->whereNotNull('works')->count(),
-            'songs' => $posts->whereNotNull('songs')->count(),
+            'places' => $posts->filter(function ($post) {
+                return $post->places->count() > 0;
+            })->count(),
+            'people' => $posts->filter(function ($post) {
+                return $post->people->count() > 0;
+            })->count(),
+            'works' => $posts->filter(function ($post) {
+                return $post->works->count() > 0;
+            })->count(),
+            'songs' => $posts->filter(function ($post) {
+                return $post->songs->count() > 0;
+            })->count(),
         ];
 
         return view('map', compact('posts', 'googleMapsApiKey', 'stats'));

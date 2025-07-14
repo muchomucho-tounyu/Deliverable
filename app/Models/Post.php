@@ -38,6 +38,20 @@ class Post extends Model
         return $this->belongsToMany(Person::class, 'person_post', 'post_id', 'person_id');
     }
 
+    public function places()
+    {
+        return $this->belongsToMany(Place::class, 'place_post', 'post_id', 'place_id');
+    }
+
+    public function works()
+    {
+        return $this->belongsToMany(Work::class, 'post_work', 'post_id', 'work_id');
+    }
+
+    public function songs()
+    {
+        return $this->belongsToMany(Song::class, 'post_song', 'post_id', 'song_id');
+    }
 
     public function work()
     {

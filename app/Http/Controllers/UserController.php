@@ -50,12 +50,23 @@ class UserController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             if ($file && $file->isValid() && $file->getRealPath() && $file->getSize() > 0) {
-                try {
-                    $imageUrl = Cloudinary::upload($file->getRealPath())->getSecurePath();
-                    $validated['image'] = $imageUrl;
-                    \Log::info('Cloudinary画像URL: ' . $imageUrl);
-                } catch (\Exception $e) {
-                    \Log::error('Cloudinaryアップロードエラー: ' . $e->getMessage());
+                // Cloudinaryの設定が正しく読み込まれているかチェック
+                $cloudinaryUrl = config('cloudinary.cloud_url');
+                if ($cloudinaryUrl && !empty($cloudinaryUrl)) {
+                    try {
+                        $imageUrl = Cloudinary::upload($file->getRealPath())->getSecurePath();
+                        $validated['image'] = $imageUrl;
+                        \Log::info('Cloudinary画像URL: ' . $imageUrl);
+                    } catch (\Exception $e) {
+                        \Log::error('Cloudinaryアップロードエラー: ' . $e->getMessage());
+                        // エラーが発生した場合はローカルストレージに保存
+                        $path = $file->store('profile_images', 'public');
+                        $validated['image'] = '/storage/' . $path;
+                    }
+                } else {
+                    // Cloudinaryの設定が読み込まれていない場合はローカルストレージに保存
+                    $path = $file->store('profile_images', 'public');
+                    $validated['image'] = '/storage/' . $path;
                 }
             }
         }
@@ -65,8 +76,6 @@ class UserController extends Controller
 
         return redirect()->route('mypage')->with('success', 'プロフィールを更新しました。');
     }
-
-
 
     public function follow(User $user)
     {

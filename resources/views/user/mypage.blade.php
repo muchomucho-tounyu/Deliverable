@@ -1,114 +1,370 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6">{{ $user->name }} さんのマイページ</h1>
+<style>
+    .profile-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px 20px 20px;
+        position: relative;
+    }
 
-    <div class="bg-white rounded shadow p-6 mb-6">
-        @if(request()->query('edit') == 1)
-        <form action="{{ route('user.update') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
-            @csrf
-            @method('PUT')
-            <div>
-                <label for="name" class="block font-semibold">名前</label>
-                <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" class="border rounded px-2 py-1 w-full">
-            </div>
-            <div>
-                <label for="email" class="block font-semibold">メール</label>
-                <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" class="border rounded px-2 py-1 w-full">
-            </div>
-            <div>
-                <label for="age" class="block font-semibold">年齢</label>
-                <input type="number" name="age" id="age" value="{{ old('age', $user->age) }}" class="border rounded px-2 py-1 w-full">
-            </div>
-            <div>
-                <label for="sex" class="block font-semibold">性別</label>
-                <select name="sex" id="sex" class="border rounded px-2 py-1 w-full">
-                    <option value="">未設定</option>
-                    <option value="male" @if(old('sex', $user->sex)==='male') selected @endif>男性</option>
-                    <option value="female" @if(old('sex', $user->sex)==='female') selected @endif>女性</option>
-                    <option value="other" @if(old('sex', $user->sex)==='other') selected @endif>その他</option>
-                </select>
-            </div>
-            <div>
-                <label for="image" class="block font-semibold">プロフィール画像</label>
-                <input type="file" name="image" id="image" accept="image/*" class="border rounded px-2 py-1 w-full">
-                @if($user->image)
-                <img src="{{ $user->image }}" alt="プロフィール画像" style="width:80px; height:80px; border-radius:50%; margin-top:8px;">
-                @endif
-            </div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">保存</button>
-            <a href="{{ route('mypage') }}" class="ml-4 text-gray-600 underline">キャンセル</a>
-        </form>
-        @else
-        <div class="flex items-center space-x-4 mb-4">
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid white;
+        object-fit: cover;
+        margin-bottom: 15px;
+    }
+
+    .profile-info {
+        text-align: center;
+    }
+
+    .profile-name {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .profile-details {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        margin-bottom: 15px;
+    }
+
+    .profile-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .btn-edit {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 8px 16px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-edit:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-1px);
+    }
+
+    .btn-logout {
+        background: rgba(239, 68, 68, 0.8);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-logout:hover {
+        background: rgba(239, 68, 68, 1);
+        transform: translateY(-1px);
+    }
+
+    .tab-container {
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .tab-nav {
+        display: flex;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .tab-button {
+        flex: 1;
+        padding: 15px;
+        text-align: center;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        font-weight: 500;
+        color: #6b7280;
+        transition: all 0.3s ease;
+    }
+
+    .tab-button.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+    }
+
+    .tab-button:hover {
+        background: #f9fafb;
+    }
+
+    .tab-content {
+        display: none;
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .post-item {
+        border-bottom: 1px solid #e5e7eb;
+        padding: 15px 0;
+        transition: all 0.3s ease;
+    }
+
+    .post-item:hover {
+        background: #f9fafb;
+        padding-left: 10px;
+        border-radius: 8px;
+    }
+
+    .post-title {
+        font-weight: 600;
+        color: #1f2937;
+        text-decoration: none;
+        font-size: 1rem;
+    }
+
+    .post-title:hover {
+        color: #667eea;
+    }
+
+    .post-meta {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin-top: 5px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #6b7280;
+    }
+
+    .empty-state-icon {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        opacity: 0.5;
+    }
+
+    .edit-form {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: 20px auto;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #374151;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-button {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .form-button:hover {
+        background: #5a67d8;
+        transform: translateY(-1px);
+    }
+</style>
+
+@if(request()->query('edit') == 1)
+<!-- 編集モード -->
+<div class="edit-form">
+    <h2 class="text-xl font-bold mb-6 text-center">プロフィール編集</h2>
+    <form action="{{ route('user.update') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+
+        <div class="form-group">
+            <label for="name" class="form-label">名前</label>
+            <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email" class="form-label">メールアドレス</label>
+            <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+            <label for="age" class="form-label">年齢</label>
+            <input type="number" name="age" id="age" value="{{ old('age', $user->age) }}" class="form-input" min="0" max="150">
+        </div>
+
+        <div class="form-group">
+            <label for="sex" class="form-label">性別</label>
+            <select name="sex" id="sex" class="form-input">
+                <option value="">未設定</option>
+                <option value="male" @if(old('sex', $user->sex)==='male') selected @endif>男性</option>
+                <option value="female" @if(old('sex', $user->sex)==='female') selected @endif>女性</option>
+                <option value="other" @if(old('sex', $user->sex)==='other') selected @endif>その他</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="image" class="form-label">プロフィール画像</label>
+            <input type="file" name="image" id="image" accept="image/*" class="form-input">
             @if($user->image)
-            <img src="{{ $user->image }}" alt="プロフィール画像" style="width:80px; height:80px; border-radius:50%;">
-            @endif
-            <div>
-                <p><strong>名前:</strong> {{ $user->name }}</p>
-                <p><strong>メール:</strong> {{ $user->email }}</p>
-                <p><strong>年齢:</strong> {{ $user->age ?? '未設定' }}</p>
-                <p><strong>性別:</strong>
-                    @if($user->sex === 'male')
-                    男性
-                    @elseif($user->sex === 'female')
-                    女性
-                    @elseif($user->sex === 'other')
-                    その他
-                    @else
-                    未設定
-                    @endif
-                </p>
-                <p><strong>登録日:</strong> {{ $user->created_at->format('Y年m月d日') }}</p>
+            <div class="mt-2">
+                <img src="{{ $user->image }}" alt="現在のプロフィール画像" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
             </div>
+            @endif
         </div>
-        <a href="{{ route('mypage', ['edit' => 1]) }}" class="bg-blue-500 text-white px-4 py-2 rounded">編集</a>
+
+        <div class="flex gap-3">
+            <button type="submit" class="form-button flex-1">保存</button>
+            <a href="{{ route('mypage') }}" class="form-button flex-1 text-center" style="background: #6b7280; text-decoration: none;">キャンセル</a>
+        </div>
+    </form>
+</div>
+@else
+<!-- 表示モード -->
+<div class="profile-header">
+    <div class="profile-info">
+        @if($user->image)
+        <img src="{{ $user->image }}" alt="プロフィール画像" class="profile-avatar">
+        @else
+        <div class="profile-avatar" style="background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+            👤
+        </div>
         @endif
-        <form action="{{ route('logout') }}" method="POST" class="mt-4">
-            @csrf
-            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">ログアウト</button>
-        </form>
-    </div>
 
-    <!-- 投稿一覧 -->
-    <div class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">📌 あなたの投稿</h2>
-        @forelse($user->posts as $post)
-        <div class="border-b py-2">
-            <a href="{{ route('posts.show', $post->id) }}" class="text-blue-500">{{ $post->title }}</a>
-            <p class="text-sm text-gray-600">投稿日: {{ $post->created_at->format('Y/m/d') }}</p>
+        <div class="profile-name">{{ $user->name }}</div>
+        <div class="profile-details">
+            @if($user->age || $user->sex)
+            {{ $user->age ?? '' }}{{ $user->age && $user->sex ? '歳・' : '' }}
+            @if($user->sex === 'male')
+            男性
+            @elseif($user->sex === 'female')
+            女性
+            @elseif($user->sex === 'other')
+            その他
+            @endif
+            @endif
+            {{ $user->age || $user->sex ? '・' : '' }}{{ $user->created_at->format('Y年m月') }}から利用中
         </div>
-        @empty
-        <p class="text-gray-500">投稿はありません。</p>
-        @endforelse
-    </div>
 
-    <!-- お気に入り一覧 -->
-    <div class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">❤️ お気に入り</h2>
-        @forelse($user->favorites as $post)
-        <p>URL: {{ route('posts.show', $post->id) }}</p>
-        <div class="border-b py-2">
-            <a href="{{ route('posts.show', $post->id) }}" class="text-blue-500">{{ $post->title }}</a>
-            <p class="text-sm text-gray-600">投稿者: {{ $post->user->name }}</p>
+        <div class="profile-actions">
+            <a href="{{ route('mypage', ['edit' => 1]) }}" class="btn-edit">プロフィール編集</a>
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn-logout">ログアウト</button>
+            </form>
         </div>
-        @empty
-        <p class="text-gray-500">お気に入りはまだありません。</p>
-        @endforelse
-    </div>
-
-    <!-- 訪問済み一覧 -->
-    <div class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">👣 訪問済みページ</h2>
-        @forelse($user->visits as $post)
-        <div class="border-b py-2">
-            <a href="{{ route('posts.show', $post->id) }}" class="text-blue-500">{{ $post->title }}</a>
-            <p class="text-sm text-gray-600">訪問日: {{ $post->pivot->created_at->format('Y/m/d H:i') }}</p>
-        </div>
-        @empty
-        <p class="text-gray-500">訪問履歴はありません。</p>
-        @endforelse
     </div>
 </div>
+
+<div class="tab-container">
+    <div class="tab-nav">
+        <button class="tab-button active" onclick="showTab('posts')">📌 投稿 ({{ $user->posts->count() }})</button>
+        <button class="tab-button" onclick="showTab('favorites')">❤️ いいね ({{ $user->favorites->count() }})</button>
+        <button class="tab-button" onclick="showTab('visits')">🏁 訪問済み ({{ $user->visits->count() }})</button>
+    </div>
+</div>
+
+<!-- 投稿タブ -->
+<div id="posts" class="tab-content active">
+    @forelse($user->posts as $post)
+    <div class="post-item">
+        <a href="{{ route('posts.show', $post->id) }}" class="post-title">{{ $post->title }}</a>
+        <div class="post-meta">{{ $post->created_at->format('Y年m月d日') }}</div>
+    </div>
+    @empty
+    <div class="empty-state">
+        <div class="empty-state-icon">📝</div>
+        <p>まだ投稿がありません</p>
+        <a href="{{ route('posts.create') }}" class="btn-edit" style="margin-top: 10px; display: inline-block;">投稿してみる</a>
+    </div>
+    @endforelse
+</div>
+
+<!-- いいねタブ -->
+<div id="favorites" class="tab-content">
+    @forelse($user->favorites as $post)
+    <div class="post-item">
+        <a href="{{ route('posts.show', $post->id) }}" class="post-title">{{ $post->title }}</a>
+        <div class="post-meta">by {{ $post->user->name }} • {{ $post->created_at->format('Y年m月d日') }}</div>
+    </div>
+    @empty
+    <div class="empty-state">
+        <div class="empty-state-icon">❤️</div>
+        <p>まだいいねした投稿がありません</p>
+    </div>
+    @endforelse
+</div>
+
+<!-- 訪問済みタブ -->
+<div id="visits" class="tab-content">
+    @forelse($user->visits as $post)
+    <div class="post-item">
+        <a href="{{ route('posts.show', $post->id) }}" class="post-title">{{ $post->title }}</a>
+        <div class="post-meta">訪問日: {{ $post->pivot->created_at->format('Y年m月d日 H:i') }}</div>
+    </div>
+    @empty
+    <div class="empty-state">
+        <div class="empty-state-icon">🏁</div>
+        <p>まだ訪問した投稿がありません</p>
+    </div>
+    @endforelse
+</div>
+
+<script>
+    function showTab(tabName) {
+        // すべてのタブコンテンツを非表示
+        const tabContents = document.querySelectorAll('.tab-content');
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        // すべてのタブボタンからactiveクラスを削除
+        const tabButtons = document.querySelectorAll('.tab-button');
+        tabButtons.forEach(button => button.classList.remove('active'));
+
+        // 選択されたタブを表示
+        document.getElementById(tabName).classList.add('active');
+
+        // クリックされたボタンにactiveクラスを追加
+        event.target.classList.add('active');
+    }
+</script>
+@endif
 @endsection

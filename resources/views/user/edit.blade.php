@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+
+@php
+use Illuminate\Support\Str;
+@endphp
+
 <div class="container mx-auto px-4 py-8 max-w-md">
     <h1 class="text-2xl font-bold mb-6">プロフィール編集</h1>
 
@@ -55,7 +60,14 @@
             <label for="image" class="block font-semibold mb-1">プロフィール画像</label>
             @if($user->image)
             <div class="mb-2">
-                <img src="{{ asset('storage/' . $user->image) }}" alt="プロフィール画像" class="w-24 h-24 object-cover rounded-full">
+                @php
+                $isCloudinary = (substr($user->image, 0, 4) === 'http');
+                @endphp
+                @if($isCloudinary)
+                <img src="{{ $user->image }}" alt="プロフィール画像" class="w-24 h-24 object-cover rounded-full">
+                @else
+                <img src="{{ asset('storage/' . ltrim($user->image, '/')) }}" alt="プロフィール画像" class="w-24 h-24 object-cover rounded-full">
+                @endif
             </div>
             @endif
             <input type="file" id="image" name="image" accept="image/*" class="w-full">

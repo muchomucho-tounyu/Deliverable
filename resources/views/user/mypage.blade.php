@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+use Illuminate\Support\Str;
+@endphp
 <style>
     .profile-header {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -263,7 +266,11 @@
 <div class="profile-header">
     <div class="profile-info">
         @if($user->image)
+        @if(Str::startsWith($user->image, ['http://', 'https://']))
         <img src="{{ $user->image }}" alt="プロフィール画像" class="profile-avatar">
+        @else
+        <img src="{{ asset($user->image) }}" alt="プロフィール画像" class="profile-avatar">
+        @endif
         @else
         <div class="profile-avatar" style="background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 3rem;">
             👤

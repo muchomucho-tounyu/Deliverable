@@ -11,6 +11,11 @@ use Illuminate\Support\Str;
 @section('content')
 
 <style>
+    .post-list-wrapper {
+        padding-top: 80px;
+        /* ヘッダー高さ分の余白を追加 */
+    }
+
     .post-item {
         background: white;
         border-radius: 12px;
@@ -133,72 +138,74 @@ use Illuminate\Support\Str;
     }
 </style>
 
-@foreach($posts as $post)
-<div class="post-item">
-    <!-- 画像 -->
-    @if(Str::startsWith($post->image, ['http://', 'https://']))
-    <img src="{{ $post->image }}" alt="投稿画像" class="post-image">
-    @elseif($post->image)
-    <img src="{{ asset($post->image) }}" alt="投稿画像" class="post-image">
-    @elseif($post->image_path)
-    <img src="{{ asset('storage/' . $post->image_path) }}" alt="投稿画像" class="post-image">
-    @endif
-
-    {{-- タイトル --}}
-    <h2 class="post-title"><a href="{{ route('posts.show', $post) }}">{{ $post->title }}</a></h2>
-
-    <!-- 場所名 -->
-    <div class="post-info">
-        <p><strong>📍 場所:</strong> {{ $post->place->name ?? '未設定' }}</p>
-
-        <!-- 作品名または楽曲名-->
-        @if ($post->work)
-        <p><strong>🎬 作品:</strong> {{ $post->work->name }}</p>
+<div class="post-list-wrapper">
+    @foreach($posts as $post)
+    <div class="post-item">
+        <!-- 画像 -->
+        @if(Str::startsWith($post->image, ['http://', 'https://']))
+        <img src="{{ $post->image }}" alt="投稿画像" class="post-image">
+        @elseif($post->image)
+        <img src="{{ asset($post->image) }}" alt="投稿画像" class="post-image">
+        @elseif($post->image_path)
+        <img src="{{ asset('storage/' . $post->image_path) }}" alt="投稿画像" class="post-image">
         @endif
 
-        @if ($post->song)
-        <p><strong>🎵 楽曲:</strong> {{ $post->song->name }}</p>
-        @endif
+        {{-- タイトル --}}
+        <h2 class="post-title"><a href="{{ route('posts.show', $post) }}">{{ $post->title }}</a></h2>
+
+        <!-- 場所名 -->
+        <div class="post-info">
+            <p><strong>📍 場所:</strong> {{ $post->place->name ?? '未設定' }}</p>
+
+            <!-- 作品名または楽曲名-->
+            @if ($post->work)
+            <p><strong>🎬 作品:</strong> {{ $post->work->name }}</p>
+            @endif
+
+            @if ($post->song)
+            <p><strong>🎵 楽曲:</strong> {{ $post->song->name }}</p>
+            @endif
+        </div>
+
+        <!-- いいね・訪問済みボタン（横並び） -->
+        <div class="action-buttons">
+            <!-- いいねボタン -->
+            <form action="{{ route('posts.favorite', $post) }}" method="POST" style="margin: 0;">
+                @csrf
+                <button type="submit" class="action-button favorite-button {{ auth()->check() && auth()->user()->hasFavorited($post) ? 'favorited' : '' }}">
+                    <span class="heart-icon">
+                        @if(auth()->check() && auth()->user()->hasFavorited($post))
+                        ❤️
+                        @else
+                        🤍
+                        @endif
+                    </span>
+                </button>
+            </form>
+
+            <!-- 訪問済みボタン -->
+            <form action="{{ route('posts.visit', $post) }}" method="POST" style="margin: 0;">
+                @csrf
+                <button type="submit" class="action-button visit-button {{ auth()->check() && auth()->user()->hasVisited($post) ? 'visited' : '' }}">
+                    <span class="location-icon">
+                        @if(auth()->check() && auth()->user()->hasVisited($post))
+                        🏁
+                        @else
+                        🚩
+                        @endif
+                    </span>
+                </button>
+            </form>
+        </div>
     </div>
+    @endforeach
 
-    <!-- いいね・訪問済みボタン（横並び） -->
-    <div class="action-buttons">
-        <!-- いいねボタン -->
-        <form action="{{ route('posts.favorite', $post) }}" method="POST" style="margin: 0;">
-            @csrf
-            <button type="submit" class="action-button favorite-button {{ auth()->check() && auth()->user()->hasFavorited($post) ? 'favorited' : '' }}">
-                <span class="heart-icon">
-                    @if(auth()->check() && auth()->user()->hasFavorited($post))
-                    ❤️
-                    @else
-                    🤍
-                    @endif
-                </span>
-            </button>
-        </form>
+    <a href="{{ route('posts.create') }}" class="fixed-create-button" title="投稿する">＋</a>
 
-        <!-- 訪問済みボタン -->
-        <form action="{{ route('posts.visit', $post) }}" method="POST" style="margin: 0;">
-            @csrf
-            <button type="submit" class="action-button visit-button {{ auth()->check() && auth()->user()->hasVisited($post) ? 'visited' : '' }}">
-                <span class="location-icon">
-                    @if(auth()->check() && auth()->user()->hasVisited($post))
-                    🏁
-                    @else
-                    🚩
-                    @endif
-                </span>
-            </button>
-        </form>
+    <!-- ページネーション -->
+    <div class="mt-8">
+        {{ $posts->links() }}
     </div>
-</div>
-@endforeach
-
-<a href="{{ route('posts.create') }}" class="fixed-create-button" title="投稿する">＋</a>
-
-<!-- ページネーション -->
-<div class="mt-8">
-    {{ $posts->links() }}
 </div>
 
 @endsection

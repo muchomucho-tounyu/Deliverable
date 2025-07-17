@@ -50,23 +50,15 @@ class UserController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             if ($file && $file->isValid() && $file->getRealPath() && $file->getSize() > 0) {
-                // Cloudinaryの設定が正しく読み込まれているかチェック
-                $cloudinaryUrl = config('cloudinary.cloud_url');
-                if ($cloudinaryUrl && !empty($cloudinaryUrl)) {
-                    try {
-                        $imageUrl = Cloudinary::upload($file->getRealPath())->getSecurePath();
-                        $validated['image'] = $imageUrl;
-                        \Log::info('Cloudinary画像URL: ' . $imageUrl);
-                    } catch (\Exception $e) {
-                        \Log::error('Cloudinaryアップロードエラー: ' . $e->getMessage());
-                        // エラーが発生した場合はローカルストレージに保存
-                        $path = $file->store('profile_images', 'public');
-                        $validated['image'] = '/storage/' . $path;
-                    }
-                } else {
-                    // Cloudinaryの設定が読み込まれていない場合はローカルストレージに保存
-                    $path = $file->store('profile_images', 'public');
-                    $validated['image'] = '/storage/' . $path;
+                try {
+                    // Cloudinaryへアップロード
+                    $imageUrl = \CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::upload($file->getRealPath())->getSecurePath();
+                    $validated['image'] = $imageUrl;
+                    \Log::info('Cloudinary画像URL: ' . $imageUrl);
+                } catch (\Exception $e) {
+                    \Log::error('Cloudinaryアップロードエラー: ' . $e->getMessage());
+                    // Cloudinaryアップロード失敗時はエラーを投げる
+                    throw $e;
                 }
             }
         }

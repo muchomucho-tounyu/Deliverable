@@ -7,7 +7,7 @@
 @section('content')
 <div class="pt-16">
 
-    <h1>{{ $post->title }}</h1>
+    <h2>{{ $post->title }}</h2>
 
     @if ($post->image)
     @if(Str::startsWith($post->image, 'http'))

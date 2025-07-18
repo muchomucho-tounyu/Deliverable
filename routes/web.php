@@ -22,7 +22,11 @@ use App\Http\Controllers\MapController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        return redirect()->route('posts.index');
+    } else {
+        return redirect()->route('login');
+    }
 });
 
 Route::resource('posts', PostController::class)->middleware('auth');

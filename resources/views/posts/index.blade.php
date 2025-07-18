@@ -141,13 +141,13 @@ use Illuminate\Support\Str;
 <div class="post-list-wrapper">
     @foreach($posts as $post)
     <div class="post-item">
-        <!-- 画像 -->
-        @if(Str::startsWith($post->image, ['http://', 'https://']))
+        {{-- 投稿画像表示部分 --}}
+        @if ($post->image)
+        @if(Str::startsWith($post->image, 'http'))
         <img src="{{ $post->image }}" alt="投稿画像" class="post-image">
-        @elseif($post->image)
-        <img src="{{ asset($post->image) }}" alt="投稿画像" class="post-image">
-        @elseif($post->image_path)
-        <img src="{{ asset('storage/' . $post->image_path) }}" alt="投稿画像" class="post-image">
+        @else
+        <img src="{{ asset('storage/' . ltrim($post->image, '/')) }}" alt="投稿画像" class="post-image">
+        @endif
         @endif
 
         {{-- タイトル --}}

@@ -192,7 +192,11 @@
     </style>
 
     <div class="show-wrapper">
-        <div class="show-card">
+        <div class="show-card" style="position:relative;">
+            <!-- 編集ボタンを右上に -->
+            <a href="/posts/{{ $post->id }}/edit" class="show-edit-fab" title="編集">
+                ✏️
+            </a>
             <div class="show-title">{{ $post->title }}</div>
             @if ($post->image)
             @if(Str::startsWith($post->image, 'http'))
@@ -223,17 +227,16 @@
             <div class="show-actions">
                 <form action="{{ route('posts.favorite', $post) }}" method="POST" style="margin:0;">
                     @csrf
-                    <button type="submit" class="show-action-btn {{ auth()->check() && auth()->user()->hasFavorited($post) ? 'favorited' : '' }}">
-                        @if(auth()->check() && auth()->user()->hasFavorited($post)) ❤️ いいね済み @else 🤍 いいね @endif
+                    <button type="submit" class="show-action-btn {{ auth()->check() && auth()->user()->hasFavorited($post) ? 'favorited' : '' }}" title="いいね">
+                        @if(auth()->check() && auth()->user()->hasFavorited($post)) ❤️ @else 🤍 @endif
                     </button>
                 </form>
                 <form action="{{ route('posts.visit', $post) }}" method="POST" style="margin:0;">
                     @csrf
-                    <button type="submit" class="show-action-btn {{ auth()->check() && auth()->user()->hasVisited($post) ? 'visited' : '' }}">
-                        @if(auth()->check() && auth()->user()->hasVisited($post)) 👣 訪問済み @else ☁️ 未開拓 @endif
+                    <button type="submit" class="show-action-btn {{ auth()->check() && auth()->user()->hasVisited($post) ? 'visited' : '' }}" title="訪問済み">
+                        @if(auth()->check() && auth()->user()->hasVisited($post)) 👣 @else ☁️ @endif
                     </button>
                 </form>
-                <a href="/posts/{{ $post->id }}/edit" class="show-edit-link">編集</a>
             </div>
             <a href="{{ route('posts.index') }}" class="show-back-link">一覧へ戻る</a>
         </div>
@@ -262,3 +265,32 @@
 
 </div>
 @endsection
+
+<style>
+    .show-edit-fab {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+        z-index: 10;
+        transition: background 0.2s, transform 0.2s;
+        border: none;
+        text-decoration: none;
+    }
+
+    .show-edit-fab:hover {
+        background: #667eea;
+        transform: scale(1.08);
+        color: #fff;
+        text-decoration: none;
+    }
+</style>

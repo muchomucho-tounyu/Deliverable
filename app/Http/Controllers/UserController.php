@@ -32,6 +32,13 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
+        // Cloudinary設定値をログ出力
+        \Log::info('cloudinary config', [
+            'cloud_name' => config('cloudinary.cloud_name'),
+            'api_key' => config('cloudinary.api_key'),
+            'api_secret' => config('cloudinary.api_secret'),
+            'url' => config('cloudinary.url'),
+        ]);
         /** @var \App\Models\User $user */
         $user = auth()->user();
         if (!$user) {

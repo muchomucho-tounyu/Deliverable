@@ -7,71 +7,6 @@
 @section('content')
 <div class="pt-32">
 
-    <h2>{{ $post->title }}</h2>
-
-    @if ($post->image)
-    @if(Str::startsWith($post->image, 'http'))
-    <div style="margin-bottom: 1em;">
-        <img src="{{ $post->image }}" alt="投稿画像" style="max-width: 100%; height: auto;">
-    </div>
-    @else
-    <div style="margin-bottom: 1em;">
-        <img src="{{ asset('storage/' . ltrim($post->image, '/')) }}" alt="投稿画像" style="max-width: 100%; height: auto;">
-    </div>
-    @endif
-    @endif
-
-    @if ($post->work)
-    <p><strong>作品名：</strong>{{ $post->work->name }}</p>
-    @endif
-
-    @if ($post->song)
-    <p><strong>楽曲名：</strong>{{ $post->song->name }}</p>
-    @endif
-
-    @if ($post->people && $post->people->isNotEmpty())
-    <p><strong>出演者・アーティスト名：</strong>
-        {{ $post->people->pluck('name')->join(', ') }}
-    </p>
-    @else
-    <p><strong>出演者・アーティスト名：</strong> 未設定</p>
-    @endif
-
-    <p><strong>場所名：</strong> {{ optional($post->place)->name ?? '未設定' }}</p>
-    <p><strong>住所：</strong> {{ optional($post->place)->address ?? '不明' }}</p>
-
-
-
-    <p><strong>ロケシーン：</strong> {{ $post->place_detail ?? 'なし' }}</p>
-    <p><strong>コメント：</strong><br>{!! nl2br(e($post->body)) ?? 'コメントなし' !!}</p>
-
-    <p><strong>投稿者：</strong> {{ $post->user->name ?? '不明' }}</p>
-    <p><strong>投稿日：</strong> {{ $post->created_at->format('Y/m/d H:i') }}</p>
-
-    <!-- いいねボタン -->
-    <form action="{{ route('posts.favorite', $post) }}" method="POST">
-        @csrf
-        <button type="submit">
-            @if(auth()->check() && auth()->user()->hasFavorited($post))
-            ❤️ いいね済み
-            @else
-            🤍 いいね
-            @endif
-        </button>
-    </form>
-
-    <!-- 訪問済みボタン -->
-    <form action="{{ route('posts.visit', $post) }}" method="POST">
-        @csrf
-        <button type="submit">
-            @if(auth()->check() && auth()->user()->hasVisited($post))
-            👣 訪問済み
-            @else
-            ☁️ 未開拓
-            @endif
-        </button>
-    </form>
-
     <style>
         .comment-section {
             background: #fff;
@@ -162,31 +97,168 @@
         }
     </style>
 
-    <div class="comment-section">
-        <div class="comment-title">コメント一覧</div>
-        <div class="comment-list">
-            @forelse($post->comments as $comment)
-            <div class="comment-card">
-                <div class="comment-user">{{ $comment->user->name }}</div>
-                <div class="comment-body">{{ $comment->body }}</div>
-                <div class="comment-date">{{ $comment->created_at->format('Y/m/d H:i') }}</div>
+    <style>
+        .show-wrapper {
+            padding-top: 80px;
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+        }
+
+        .show-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px 28px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+            margin-bottom: 40px;
+        }
+
+        .show-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 18px;
+        }
+
+        .show-image {
+            max-width: 350px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.10);
+        }
+
+        .show-info {
+            color: #555;
+            margin-bottom: 18px;
+            font-size: 1.08rem;
+        }
+
+        .show-info strong {
+            color: #374151;
+            margin-right: 6px;
+        }
+
+        .show-actions {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .show-action-btn {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .show-action-btn.favorited {
+            color: #e53e3e;
+        }
+
+        .show-action-btn.visited {
+            color: #38a169;
+        }
+
+        .show-action-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .show-edit-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #667eea;
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1px solid #667eea;
+            transition: color 0.2s;
+        }
+
+        .show-edit-link:hover {
+            color: #764ba2;
+        }
+
+        .show-back-link {
+            display: block;
+            margin-top: 24px;
+            color: #6b7280;
+            text-align: right;
+            text-decoration: underline;
+            font-size: 1rem;
+        }
+    </style>
+
+    <div class="show-wrapper">
+        <div class="show-card">
+            <div class="show-title">{{ $post->title }}</div>
+            @if ($post->image)
+            @if(Str::startsWith($post->image, 'http'))
+            <img src="{{ $post->image }}" alt="投稿画像" class="show-image">
+            @else
+            <img src="{{ asset('storage/' . ltrim($post->image, '/')) }}" alt="投稿画像" class="show-image">
+            @endif
+            @endif
+            <div class="show-info">
+                @if ($post->work)
+                <div><strong>🎬 作品名:</strong>{{ $post->work->name }}</div>
+                @endif
+                @if ($post->song)
+                <div><strong>🎵 楽曲名:</strong>{{ $post->song->name }}</div>
+                @endif
+                @if ($post->people && $post->people->isNotEmpty())
+                <div><strong>👤 出演者・アーティスト名:</strong>{{ $post->people->pluck('name')->join(', ') }}</div>
+                @else
+                <div><strong>👤 出演者・アーティスト名:</strong>未設定</div>
+                @endif
+                <div><strong>📍 場所名:</strong>{{ optional($post->place)->name ?? '未設定' }}</div>
+                <div><strong>🏠 住所:</strong>{{ optional($post->place)->address ?? '不明' }}</div>
+                <div><strong>🎬 ロケシーン:</strong>{{ $post->place_detail ?? 'なし' }}</div>
+                <div><strong>📝 コメント:</strong><br>{!! nl2br(e($post->body)) ?? 'コメントなし' !!}</div>
+                <div><strong>🧑 投稿者:</strong>{{ $post->user->name ?? '不明' }}</div>
+                <div><strong>🕒 投稿日:</strong>{{ $post->created_at->format('Y/m/d H:i') }}</div>
             </div>
-            @empty
-            <div style="color:#888;">まだコメントはありません。</div>
-            @endforelse
+            <div class="show-actions">
+                <form action="{{ route('posts.favorite', $post) }}" method="POST" style="margin:0;">
+                    @csrf
+                    <button type="submit" class="show-action-btn {{ auth()->check() && auth()->user()->hasFavorited($post) ? 'favorited' : '' }}">
+                        @if(auth()->check() && auth()->user()->hasFavorited($post)) ❤️ いいね済み @else 🤍 いいね @endif
+                    </button>
+                </form>
+                <form action="{{ route('posts.visit', $post) }}" method="POST" style="margin:0;">
+                    @csrf
+                    <button type="submit" class="show-action-btn {{ auth()->check() && auth()->user()->hasVisited($post) ? 'visited' : '' }}">
+                        @if(auth()->check() && auth()->user()->hasVisited($post)) 👣 訪問済み @else ☁️ 未開拓 @endif
+                    </button>
+                </form>
+                <a href="/posts/{{ $post->id }}/edit" class="show-edit-link">編集</a>
+            </div>
+            <a href="{{ route('posts.index') }}" class="show-back-link">一覧へ戻る</a>
         </div>
-        <form action="{{ route('comments.store',$post) }}" method="POST" class="comment-form">
-            @csrf
-            <textarea name="body" placeholder="コメントを書く" rows="3" required></textarea>
-            <button type="submit">送信</button>
-        </form>
+
+        <div class="comment-section">
+            <div class="comment-title">コメント一覧</div>
+            <div class="comment-list">
+                @forelse($post->comments as $comment)
+                <div class="comment-card">
+                    <div class="comment-user">{{ $comment->user->name }}</div>
+                    <div class="comment-body">{{ $comment->body }}</div>
+                    <div class="comment-date">{{ $comment->created_at->format('Y/m/d H:i') }}</div>
+                </div>
+                @empty
+                <div style="color:#888;">まだコメントはありません。</div>
+                @endforelse
+            </div>
+            <form action="{{ route('comments.store',$post) }}" method="POST" class="comment-form">
+                @csrf
+                <textarea name="body" placeholder="コメントを書く" rows="3" required></textarea>
+                <button type="submit">送信</button>
+            </form>
+        </div>
+
     </div>
-
-
-    <div class="edit"><a href="/posts/{{ $post->id }}/edit">編集</a></div>
-
-
-    <p><a href="{{ route('posts.index') }}">一覧へ戻る</a></p>
 
 </div>
 @endsection

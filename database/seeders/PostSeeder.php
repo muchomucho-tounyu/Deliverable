@@ -31,7 +31,7 @@ class PostSeeder extends Seeder
             'longitude' => 139.600542,
         ]);
 
-        $post1->people()->attach([4, 13]);
+        $post1->people()->attach([4, 14]);
 
 
         $post2 = Post::create([
@@ -225,7 +225,7 @@ class PostSeeder extends Seeder
             'longitude' => 139.7197380,
         ]);
 
-        $post13->people()->attach([23]);
+        $post13->people()->attach([24]);
 
         $post14 = Post::create([
             'user_id' => 1,
@@ -273,7 +273,7 @@ class PostSeeder extends Seeder
             'longitude' => 140.5774134,
         ]);
 
-        $post16->people()->attach([10, 24]);
+        $post16->people()->attach([10, 25]);
 
         $post17 = Post::create([
             'user_id' => 1,
@@ -289,7 +289,7 @@ class PostSeeder extends Seeder
             'longitude' => 139.643173,
         ]);
 
-        $post17->people()->attach([20]);
+        $post17->people()->attach([21]);
 
         $post18 = Post::create([
             'user_id' => 1,
@@ -305,7 +305,7 @@ class PostSeeder extends Seeder
             'longitude' => 140.815302,
         ]);
 
-        $post18->people()->attach([22]);
+        $post18->people()->attach([23]);
 
         $post19 = Post::create([
             'user_id' => 1,
@@ -321,7 +321,7 @@ class PostSeeder extends Seeder
             'longitude' => 139.563899,
         ]);
 
-        $post19->people()->attach([21]);
+        $post19->people()->attach([22]);
 
         $post20 = Post::create([
             'user_id' => 1,
@@ -337,7 +337,7 @@ class PostSeeder extends Seeder
             'longitude' => 139.707228,
         ]);
 
-        $post20->people()->attach([2, 17]);
+        $post20->people()->attach([2, 18]);
         //
     }
 }

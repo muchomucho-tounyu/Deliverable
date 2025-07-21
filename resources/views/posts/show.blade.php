@@ -193,18 +193,18 @@
 
     <div class="show-wrapper">
         <div class="show-card" style="position:relative;">
-            <!-- 投稿者アイコン＋名前 -->
-            <div class="show-user-info">
+            <!-- 投稿者アイコン＋名前（タイトルの左横に並べる） -->
+            <div class="show-header-row">
                 <a href="{{ url('/profile/'.$post->user->id) }}" class="show-user-link">
                     <img src="{{ $post->user->image ? asset('storage/' . ltrim($post->user->image, '/')) : asset('images/default-user.png') }}" class="show-user-avatar" alt="ユーザーアイコン">
                     <span class="show-user-name">{{ $post->user->name }}</span>
                 </a>
+                <span class="show-title">{{ $post->title }}</span>
             </div>
             <!-- 編集ボタンを右上に -->
             <a href="/posts/{{ $post->id }}/edit" class="show-edit-fab" title="編集">
                 ✏️
             </a>
-            <div class="show-title">{{ $post->title }}</div>
             @if ($post->image)
             @if(Str::startsWith($post->image, 'http'))
             <img src="{{ $post->image }}" alt="投稿画像" class="show-image">
@@ -301,13 +301,11 @@
         text-decoration: none;
     }
 
-    .show-user-info {
-        position: absolute;
-        top: 18px;
-        left: 18px;
+    .show-header-row {
         display: flex;
         align-items: center;
-        z-index: 11;
+        gap: 18px;
+        margin-bottom: 18px;
     }
 
     .show-user-link {
@@ -324,18 +322,27 @@
     }
 
     .show-user-avatar {
-        width: 44px;
-        height: 44px;
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
         object-fit: cover;
-        margin-right: 10px;
+        margin-right: 8px;
         border: 2px solid #fff;
         box-shadow: 0 2px 8px rgba(102, 126, 234, 0.10);
         background: #f3f4f6;
     }
 
     .show-user-name {
-        font-size: 1.08rem;
+        font-size: 1.02rem;
         font-weight: bold;
+        margin-right: 2px;
+    }
+
+    .show-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 0;
+        letter-spacing: 0.02em;
     }
 </style>

@@ -201,10 +201,17 @@
                 </a>
                 <span class="show-title">{{ $post->title }}</span>
             </div>
-            <!-- 編集ボタンを右上に -->
+            @if(auth()->check() && auth()->id() === $post->user_id)
+            <!-- 編集・削除ボタン（投稿者本人のみ表示） -->
             <a href="/posts/{{ $post->id }}/edit" class="show-edit-fab" title="編集">
                 ✏️
             </a>
+            <form action="/posts/{{ $post->id }}" method="POST" class="show-delete-fab" onsubmit="return confirm('本当に削除しますか？');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" title="削除" style="background:none;border:none;padding:0;cursor:pointer;font-size:1.5rem;">🗑️</button>
+            </form>
+            @endif
             @if ($post->image)
             @if(Str::startsWith($post->image, 'http'))
             <img src="{{ $post->image }}" alt="投稿画像" class="show-image">
@@ -277,7 +284,7 @@
     .show-edit-fab {
         position: absolute;
         top: 18px;
-        right: 18px;
+        right: 68px;
         width: 44px;
         height: 44px;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -299,6 +306,21 @@
         transform: scale(1.08);
         color: #fff;
         text-decoration: none;
+    }
+
+    .show-delete-fab {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .show-delete-fab button:hover {
+        color: #e53e3e;
+        transform: scale(1.08);
     }
 
     .show-header-row {

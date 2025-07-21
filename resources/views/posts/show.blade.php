@@ -193,6 +193,13 @@
 
     <div class="show-wrapper">
         <div class="show-card" style="position:relative;">
+            <!-- 投稿者アイコン＋名前 -->
+            <div class="show-user-info">
+                <a href="{{ url('/profile/'.$post->user->id) }}" class="show-user-link">
+                    <img src="{{ $post->user->image ? asset('storage/' . ltrim($post->user->image, '/')) : asset('images/default-user.png') }}" class="show-user-avatar" alt="ユーザーアイコン">
+                    <span class="show-user-name">{{ $post->user->name }}</span>
+                </a>
+            </div>
             <!-- 編集ボタンを右上に -->
             <a href="/posts/{{ $post->id }}/edit" class="show-edit-fab" title="編集">
                 ✏️
@@ -292,5 +299,43 @@
         transform: scale(1.08);
         color: #fff;
         text-decoration: none;
+    }
+
+    .show-user-info {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        display: flex;
+        align-items: center;
+        z-index: 11;
+    }
+
+    .show-user-link {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: #333;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
+
+    .show-user-link:hover {
+        color: #667eea;
+    }
+
+    .show-user-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 10px;
+        border: 2px solid #fff;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.10);
+        background: #f3f4f6;
+    }
+
+    .show-user-name {
+        font-size: 1.08rem;
+        font-weight: bold;
     }
 </style>

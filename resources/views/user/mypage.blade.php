@@ -8,8 +8,10 @@ use Illuminate\Support\Str;
     .profile-header {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        padding: 80px 20px 20px;
+        padding: 70px 20px 28px;
         position: relative;
+        border-radius: 0 0 24px 24px;
+        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.10);
     }
 
     .profile-avatar {
@@ -23,18 +25,20 @@ use Illuminate\Support\Str;
 
     .profile-info {
         text-align: center;
+        margin-bottom: 8px;
     }
 
     .profile-name {
-        font-size: 1.5rem;
+        font-size: 1.7rem;
         font-weight: bold;
-        margin-bottom: 5px;
+        margin-bottom: 7px;
+        letter-spacing: 0.03em;
     }
 
     .profile-details {
-        font-size: 0.9rem;
-        opacity: 0.9;
-        margin-bottom: 15px;
+        font-size: 1rem;
+        opacity: 0.92;
+        margin-bottom: 10px;
     }
 
     .profile-actions {
@@ -210,6 +214,50 @@ use Illuminate\Support\Str;
         background: #5a67d8;
         transform: translateY(-1px);
     }
+
+    .profile-follows {
+        display: flex;
+        gap: 24px;
+        justify-content: center;
+        margin-bottom: 8px;
+        font-size: 1.12rem;
+    }
+
+    .profile-follow-link {
+        cursor: pointer;
+        color: #fff;
+        font-weight: bold;
+        transition: color 0.2s;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.10);
+        padding: 2px 8px;
+        border-radius: 8px;
+    }
+
+    .profile-follow-link:hover {
+        color: #ffe066;
+        background: rgba(255, 255, 255, 0.10);
+        text-decoration: underline;
+    }
+
+    .profile-follow-count {
+        margin-left: 2px;
+        font-size: 1.13em;
+    }
+
+    .profile-bio {
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+        border-radius: 12px;
+        padding: 16px 22px;
+        margin: 16px auto 0 auto;
+        max-width: 440px;
+        font-size: 1.08rem;
+        text-align: center;
+        white-space: pre-line;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.10);
+        letter-spacing: 0.01em;
+        line-height: 1.7;
+    }
 </style>
 
 @if(request()->query('edit') == 1)
@@ -243,6 +291,11 @@ use Illuminate\Support\Str;
                 <option value="female" @if(old('sex', $user->sex)==='female') selected @endif>女性</option>
                 <option value="other" @if(old('sex', $user->sex)==='other') selected @endif>その他</option>
             </select>
+        </div>
+
+        <div class="form-group">
+            <label for="bio" class="form-label">自己紹介文</label>
+            <textarea name="bio" id="bio" class="form-input" rows="4" maxlength="1000">{{ old('bio', $user->bio) }}</textarea>
         </div>
 
         <div class="form-group">
@@ -290,6 +343,13 @@ use Illuminate\Support\Str;
             @endif
             @endif
             {{ $user->age || $user->sex ? '・' : '' }}{{ $user->created_at->format('Y年m月') }}から利用中
+        </div>
+        @if($user->bio)
+        <div class="profile-bio">{{ $user->bio }}</div>
+        @endif
+        <div class="profile-follows">
+            <span class="profile-follow-link" onclick="openFollowModal('followings')">フォロー <span class="profile-follow-count">{{ $user->followings->count() }}</span></span>
+            <span class="profile-follow-link" onclick="openFollowModal('followers')">フォロワー <span class="profile-follow-count">{{ $user->followers->count() }}</span></span>
         </div>
 
         <div class="profile-actions">
@@ -371,6 +431,11 @@ use Illuminate\Support\Str;
 
         // クリックされたボタンにactiveクラスを追加
         event.target.classList.add('active');
+    }
+</script>
+<script>
+    function openFollowModal(type) {
+        alert(type + '一覧モーダル（ここに実装予定）');
     }
 </script>
 @endif

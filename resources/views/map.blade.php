@@ -20,6 +20,33 @@
             overflow: hidden;
         }
 
+        .back-to-search-btn {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            z-index: 1101;
+            background: #fff;
+            color: #667eea;
+            font-weight: bold;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.10);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            font-size: 1.5em;
+            padding: 0;
+        }
+
+        .back-to-search-btn:hover {
+            background: #e0e7ff;
+            color: #764ba2;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.18);
+        }
+
         .search-header {
             background: white;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -29,6 +56,8 @@
             left: 0;
             right: 0;
             z-index: 1000;
+            padding-left: 60px;
+            /* ボタン分の余白を確保 */
         }
 
         .map-container {
@@ -148,36 +177,13 @@
                 top: 120px;
             }
         }
-
-        .back-to-search-btn {
-            position: fixed;
-            top: 18px;
-            left: 18px;
-            z-index: 1100;
-            background: #fff;
-            color: #667eea;
-            font-weight: bold;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.10);
-            padding: 7px 18px 7px 12px;
-            text-decoration: none;
-            transition: background 0.2s, color 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .back-to-search-btn:hover {
-            background: #e0e7ff;
-            color: #764ba2;
-        }
     </style>
 </head>
 
 <body>
     <!-- 検索に戻るボタン -->
     <a href="{{ url()->previous() }}" class="back-to-search-btn" title="検索に戻る">
-        <span style="font-size:1.3em;">←</span> 検索に戻る
+        <span style="font-size:2em;line-height:1;">&lt;</span>
     </a>
     <!-- 検索ヘッダー -->
     <div class="search-header">

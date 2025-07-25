@@ -9,7 +9,7 @@ class Work extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'overview', 'trailer_url', 'official_site'];
     public function people()
     {
         return $this->belongsToMany(Person::class);

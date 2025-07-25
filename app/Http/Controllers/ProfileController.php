@@ -78,6 +78,26 @@ class ProfileController extends Controller
     }
 
     /**
+     * フォロー処理
+     */
+    public function follow($id)
+    {
+        $user = auth()->user();
+        $user->follow($id);
+        return back();
+    }
+
+    /**
+     * フォロー解除処理
+     */
+    public function unfollow($id)
+    {
+        $user = auth()->user();
+        $user->unfollow($id);
+        return back();
+    }
+
+    /**
      * Delete the user's account.
      */
     public function destroy(Request $request): RedirectResponse

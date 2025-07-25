@@ -63,6 +63,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/{id}/followings', [App\Http\Controllers\ProfileController::class, 'followings'])->name('profile.followings');
     // フォロワー一覧
     Route::get('/profile/{id}/followers', [App\Http\Controllers\ProfileController::class, 'followers'])->name('profile.followers');
+    // フォロー・フォロー解除
+    Route::post('/profile/{id}/follow', [App\Http\Controllers\ProfileController::class, 'follow'])->name('profile.follow');
+    Route::post('/profile/{id}/unfollow', [App\Http\Controllers\ProfileController::class, 'unfollow'])->name('profile.unfollow');
 });
 
 require __DIR__ . '/auth.php';

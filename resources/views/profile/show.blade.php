@@ -15,14 +15,27 @@
     @endsection
 
     @section('content')
-    <div class="profile-wrapper" style="max-width:700px;margin:0 auto;">
+    <div class="profile-wrapper" style="max-width:700px;margin:0 auto; padding-top:64px;">
         <div class="profile-card" style="background:#fff;border-radius:18px;box-shadow:0 4px 16px rgba(102,126,234,0.10);padding:36px 28px 32px 28px;">
             <div style="display:flex;align-items:center;gap:18px;">
                 <img src="{{ $user->image ? asset('storage/' . ltrim($user->image, '/')) : asset('images/default-user.png') }}" alt="ユーザー画像" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 8px rgba(102,126,234,0.10);background:#f3f4f6;">
                 <div>
                     <div style="font-size:1.5rem;font-weight:bold;color:#333;">{{ $user->name }}</div>
-                    <div style="color:#888;font-size:1.02rem;margin-top:4px;">{{ $user->profile ?? '自己紹介は未設定です。' }}</div>
+                    @if($user->bio)
+                    <div style="color:#888;font-size:1.02rem;margin-top:4px;">{{ $user->bio }}</div>
+                    @endif
                 </div>
+                @auth
+                @if(auth()->id() !== $user->id)
+                <form action="{{ auth()->user()->isFollowing($user->id) ? route('profile.unfollow', $user->id) : route('profile.follow', $user->id) }}" method="POST" style="margin-left:auto;">
+                    @csrf
+                    <button type="submit"
+                        class="follow-btn {{ auth()->user()->isFollowing($user->id) ? 'following' : '' }}">
+                        {{ auth()->user()->isFollowing($user->id) ? 'フォロー中（解除）' : 'フォロー' }}
+                    </button>
+                </form>
+                @endif
+                @endauth
             </div>
             <div class="profile-follows" style="display:flex;gap:24px;font-size:1.08rem;margin:18px 0 0 0;justify-content:left;">
                 <a href="{{ route('profile.followings', $user->id) }}" style="color:#667eea;font-weight:bold;background:#f3f4f6;padding:4px 14px;border-radius:8px;text-decoration:none;">フォロー <span class="profile-follow-count">{{ $user->followings->count() }}</span></a>
@@ -142,5 +155,21 @@
         color: #888;
         text-align: center;
         margin-top: 24px;
+    }
+
+    .follow-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #fff;
+        font-weight: bold;
+        padding: 8px 22px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .follow-btn.following {
+        background: #e0e7ff;
+        color: #667eea;
     }
 </style>

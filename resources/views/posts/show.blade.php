@@ -260,7 +260,11 @@
             <div class="comment-list">
                 @forelse($post->comments as $comment)
                 <div class="comment-card">
-                    <div class="comment-user">{{ $comment->user->name }}</div>
+                    <div class="comment-user">
+                        <a href="{{ route('profile.show', ['id' => $comment->user->id]) }}">
+                            {{ $comment->user->name }}
+                        </a>
+                    </div>
                     <div class="comment-body">{{ $comment->body }}</div>
                     <div class="comment-date">{{ $comment->created_at->format('Y/m/d H:i') }}</div>
                 </div>

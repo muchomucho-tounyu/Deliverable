@@ -18,7 +18,15 @@ class UserSeeder extends Seeder
             ['email' => 'test@example.com'],
             [
                 'name' => 'testuser',
-                'password' => Hash::make('password'),
+                'password' => bcrypt('password'),
+                'image' => 'https://res.cloudinary.com/ddmyych6n/image/upload/v1752475262/animal_melt4_hamster_besv3f.png',
+            ]
+        );
+        User::firstOrCreate(
+            ['email' => 'testuser2@example.com'],
+            [
+                'name' => 'testuser2',
+                'password' => bcrypt('password'),
                 'image' => 'https://res.cloudinary.com/ddmyych6n/image/upload/v1752475262/animal_melt4_hamster_besv3f.png',
             ]
         );

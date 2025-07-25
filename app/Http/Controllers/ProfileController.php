@@ -46,6 +46,18 @@ class ProfileController extends Controller
     }
 
     /**
+     * 指定IDのユーザープロフィールを表示
+     */
+    public function show($id)
+    {
+        $user = \App\Models\User::with(['posts', 'followings', 'followers'])->find($id);
+        if (!$user) {
+            return redirect('/')->with('error', 'ユーザーが見つかりませんでした');
+        }
+        return view('profile.show', compact('user'));
+    }
+
+    /**
      * Delete the user's account.
      */
     public function destroy(Request $request): RedirectResponse

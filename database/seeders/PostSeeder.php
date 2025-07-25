@@ -35,7 +35,7 @@ class PostSeeder extends Seeder
 
 
         $post2 = Post::create([
-            'user_id' => 1,
+            'user_id' => 2,
             'work_id' => 2,
             'song_id' => 10,
             'place_id' => 2,
@@ -83,7 +83,7 @@ class PostSeeder extends Seeder
         $post4->people()->attach([3, 12]);
 
         $post5 = Post::create([
-            'user_id' => 1,
+            'user_id' => 2,
             'work_id' => 5,
             'song_id' => null,
             'place_id' => 5,
@@ -115,7 +115,7 @@ class PostSeeder extends Seeder
         $post6->people()->attach([11, 13, 17]);
 
         $post7 = Post::create([
-            'user_id' => 1,
+            'user_id' => 2,
             'work_id' => 7,
             'song_id' => 2,
             'place_id' => 7,
@@ -180,7 +180,7 @@ class PostSeeder extends Seeder
         $post10->people()->attach([2, 10]);
 
         $post11 = Post::create([
-            'user_id' => 1,
+            'user_id' => 2,
             'work_id' => 10,
             'song_id' => 1,
             'place_id' => 11,
@@ -228,7 +228,7 @@ class PostSeeder extends Seeder
         $post13->people()->attach([24]);
 
         $post14 = Post::create([
-            'user_id' => 1,
+            'user_id' => 2,
             'work_id' => null,
             'song_id' => 4,
             'place_id' => 13,
@@ -292,7 +292,7 @@ class PostSeeder extends Seeder
         $post17->people()->attach([21]);
 
         $post18 = Post::create([
-            'user_id' => 1,
+            'user_id' => 2,
             'work_id' => null,
             'song_id' => 8,
             'place_id' => 17,
@@ -308,7 +308,7 @@ class PostSeeder extends Seeder
         $post18->people()->attach([23]);
 
         $post19 = Post::create([
-            'user_id' => 1,
+            'user_id' => 2,
             'work_id' => null,
             'song_id' => 9,
             'place_id' => 18,

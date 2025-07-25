@@ -58,6 +58,26 @@ class ProfileController extends Controller
     }
 
     /**
+     * 指定IDのユーザーがフォローしているユーザー一覧
+     */
+    public function followings($id)
+    {
+        $user = \App\Models\User::with('followings')->findOrFail($id);
+        $followings = $user->followings;
+        return view('profile.followings', compact('user', 'followings'));
+    }
+
+    /**
+     * 指定IDのユーザーをフォローしているユーザー一覧
+     */
+    public function followers($id)
+    {
+        $user = \App\Models\User::with('followers')->findOrFail($id);
+        $followers = $user->followers;
+        return view('profile.followers', compact('user', 'followers'));
+    }
+
+    /**
      * Delete the user's account.
      */
     public function destroy(Request $request): RedirectResponse

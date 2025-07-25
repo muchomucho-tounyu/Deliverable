@@ -59,6 +59,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/profile/{id}', [App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
+    // フォロー一覧
+    Route::get('/profile/{id}/followings', [App\Http\Controllers\ProfileController::class, 'followings'])->name('profile.followings');
+    // フォロワー一覧
+    Route::get('/profile/{id}/followers', [App\Http\Controllers\ProfileController::class, 'followers'])->name('profile.followers');
 });
 
 require __DIR__ . '/auth.php';

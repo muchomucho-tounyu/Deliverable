@@ -85,6 +85,11 @@ class UserController extends Controller
             'all_data' => $user->fresh()->toArray()
         ]);
 
+        // デバッグ用: 画像が選択されていない場合の処理
+        if (!$request->hasFile('image')) {
+            \Log::info('画像が選択されていません');
+        }
+
         return redirect()->route('mypage')->with('success', 'プロフィールを更新しました。');
     }
 

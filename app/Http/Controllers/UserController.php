@@ -57,6 +57,14 @@ class UserController extends Controller
             'request_all' => $request->all()
         ]);
 
+        // デバッグ用：リクエストの詳細をログ出力
+        \Log::info('リクエスト詳細', [
+            'method' => $request->method(),
+            'url' => $request->url(),
+            'all_input' => $request->all(),
+            'files' => $request->allFiles()
+        ]);
+
         // 強制的にテスト用画像URLを設定
         if ($request->hasFile('image')) {
             $file = $request->file('image');

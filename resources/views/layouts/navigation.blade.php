@@ -39,15 +39,15 @@
                         @if(Auth::user()->image && Auth::user()->image !== 'null')
                         @if(str_starts_with(Auth::user()->image, 'http'))
                         <img src="{{ Auth::user()->image }}" alt="ユーザーアイコン"
-                            class="w-8 h-8 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
+                            class="w-6 h-6 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
                         @else
                         <img src="{{ asset(Auth::user()->image) }}" alt="ユーザーアイコン"
-                            class="w-8 h-8 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
+                            class="w-6 h-6 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
                         @endif
                         @else
                         <!-- デフォルトのユーザーアイコン（SVG） -->
-                        <div class="w-8 h-8 rounded-full bg-gray-200 border-2 border-gray-300 hover:border-blue-300 transition-colors flex items-center justify-center">
-                            <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="w-6 h-6 rounded-full bg-gray-200 border-2 border-gray-300 hover:border-blue-300 transition-colors flex items-center justify-center">
+                            <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                             </svg>
                         </div>

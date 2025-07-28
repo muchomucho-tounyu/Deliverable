@@ -78,4 +78,34 @@ use Illuminate\Support\Str;
         </button>
     </form>
 </div>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const imageFile = document.getElementById('image').files[0];
+
+        if (imageFile) {
+            formData.set('image', imageFile);
+            console.log('Image file selected:', imageFile.name, imageFile.size);
+        }
+
+        fetch('{{ route("user.update") }}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                }
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Response:', data);
+                window.location.href = '{{ route("mypage") }}';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>
 @endsection

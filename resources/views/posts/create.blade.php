@@ -251,13 +251,13 @@
                 <div class="form-group">
                     <label for="work_name" class="form-label">作品名</label>
                     <input type="text" name="work_name" id="work_name" value="{{ old('work_name') }}" class="form-input" placeholder="アニメ・映画・ドラマ名">
-                    <div class="field-hint">作品名を入力すると、楽曲関連の項目が非表示になります</div>
+                    <div class="field-hint">作品名を入力すると、テーマソングの項目が表示されます</div>
                 </div>
 
-                <div class="form-group">
-                    <label for="song_name" class="form-label">楽曲名</label>
-                    <input type="text" name="song_name" id="song_name" value="{{ old('song_name') }}" class="form-input" placeholder="テーマソング・挿入歌・MVの撮影地など">
-                    <div class="field-hint">楽曲名を入力すると、作品関連の項目が非表示になります</div>
+                <div class="form-group" id="song_name_group" style="display: none;">
+                    <label for="song_name" class="form-label">テーマソング</label>
+                    <input type="text" name="song_name" id="song_name" value="{{ old('song_name') }}" class="form-input" placeholder="テーマソング・挿入歌・エンディング曲など">
+                    <div class="field-hint">作品のテーマソングや印象的な楽曲があれば入力してください</div>
                 </div>
             </div>
 
@@ -322,85 +322,36 @@
     document.addEventListener('DOMContentLoaded', function() {
         const workNameInput = document.getElementById('work_name');
         const songNameInput = document.getElementById('song_name');
-        const personNameInput = document.getElementById('person_name');
-
-        // 作品関連の項目を取得
-        const workRelatedFields = [
-            document.querySelector('label[for="work_name"]').parentElement,
-            document.querySelector('label[for="person_name"]').parentElement
-        ];
-
-        // 楽曲関連の項目を取得
-        const songRelatedFields = [
-            document.querySelector('label[for="song_name"]').parentElement
-        ];
-
-        // 楽曲名が入力された時の処理
-        function handleSongInput() {
-            const hasSongName = songNameInput.value.trim() !== '';
-            const hasWorkName = workNameInput.value.trim() !== '';
-
-            // 楽曲名が入力されている場合、作品関連項目を非表示
-            workRelatedFields.forEach(field => {
-                if (hasSongName && !hasWorkName) {
-                    field.style.display = 'none';
-                } else {
-                    field.style.display = 'block';
-                }
-            });
-
-            // 楽曲名が入力されている場合、楽曲関連項目を強調表示
-            songRelatedFields.forEach(field => {
-                if (hasSongName) {
-                    field.style.backgroundColor = '#f0f4ff';
-                    field.style.border = '2px solid #667eea';
-                    field.style.borderRadius = '8px';
-                    field.style.padding = '10px';
-                } else {
-                    field.style.backgroundColor = '';
-                    field.style.border = '';
-                    field.style.borderRadius = '';
-                    field.style.padding = '';
-                }
-            });
-        }
+        const songNameGroup = document.getElementById('song_name_group');
 
         // 作品名が入力された時の処理
         function handleWorkInput() {
-            const hasSongName = songNameInput.value.trim() !== '';
             const hasWorkName = workNameInput.value.trim() !== '';
 
-            // 作品名が入力されている場合、楽曲関連項目を非表示
-            songRelatedFields.forEach(field => {
-                if (hasWorkName && !hasSongName) {
-                    field.style.display = 'none';
-                } else {
-                    field.style.display = 'block';
-                }
-            });
-
-            // 作品名が入力されている場合、作品関連項目を強調表示
-            workRelatedFields.forEach(field => {
-                if (hasWorkName) {
-                    field.style.backgroundColor = '#f0f4ff';
-                    field.style.border = '2px solid #667eea';
-                    field.style.borderRadius = '8px';
-                    field.style.padding = '10px';
-                } else {
-                    field.style.backgroundColor = '';
-                    field.style.border = '';
-                    field.style.borderRadius = '';
-                    field.style.padding = '';
-                }
-            });
+            // 作品名が入力されている場合、テーマソング項目を表示
+            if (hasWorkName) {
+                songNameGroup.style.display = 'block';
+                songNameGroup.style.backgroundColor = '#f0f4ff';
+                songNameGroup.style.border = '2px solid #667eea';
+                songNameGroup.style.borderRadius = '8px';
+                songNameGroup.style.padding = '10px';
+                songNameGroup.style.marginTop = '10px';
+            } else {
+                songNameGroup.style.display = 'none';
+                songNameGroup.style.backgroundColor = '';
+                songNameGroup.style.border = '';
+                songNameGroup.style.borderRadius = '';
+                songNameGroup.style.padding = '';
+                songNameGroup.style.marginTop = '';
+                // 作品名が削除された場合、テーマソングの入力もクリア
+                songNameInput.value = '';
+            }
         }
 
         // イベントリスナーを追加
-        songNameInput.addEventListener('input', handleSongInput);
         workNameInput.addEventListener('input', handleWorkInput);
 
         // 初期状態を設定
-        handleSongInput();
         handleWorkInput();
     });
 </script>

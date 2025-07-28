@@ -54,7 +54,8 @@ class UserController extends Controller
             'has_file' => $request->hasFile('image'),
             'file_valid' => $request->hasFile('image') ? $request->file('image')->isValid() : false,
             'file_size' => $request->hasFile('image') ? $request->file('image')->getSize() : 0,
-            'all_files' => $request->allFiles()
+            'all_files' => $request->allFiles(),
+            'request_all' => $request->all()
         ]);
 
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -73,6 +74,10 @@ class UserController extends Controller
             }
         } else {
             \Log::info('画像が選択されていないか、無効です');
+            // 画像が選択されていない場合、既存の画像URLを保持
+            if (!$request->hasFile('image')) {
+                unset($validated['image']); // imageフィールドを更新対象から除外
+            }
         }
 
         // 更新

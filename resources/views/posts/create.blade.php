@@ -201,6 +201,45 @@
         margin-top: 5px;
     }
 
+    .radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 8px;
+    }
+
+    .radio-label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 12px 16px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        background: #f9fafb;
+        transition: all 0.3s ease;
+    }
+
+    .radio-label:hover {
+        border-color: #667eea;
+        background: #f0f4ff;
+    }
+
+    .radio-label input[type="radio"] {
+        margin-right: 12px;
+        transform: scale(1.2);
+    }
+
+    .radio-label input[type="radio"]:checked+.radio-text {
+        color: #667eea;
+        font-weight: 600;
+    }
+
+    .radio-text {
+        font-size: 1rem;
+        color: #374151;
+        transition: all 0.3s ease;
+    }
+
     @media (max-width: 768px) {
         .form-row {
             grid-template-columns: 1fr;
@@ -247,17 +286,31 @@
                 <div class="field-hint">例：君の名は。の階段、鬼滅の刃の浅草寺、楽曲の聖地など</div>
             </div>
 
+            <div class="form-group">
+                <label class="form-label">投稿タイプ<span class="required">*</span></label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="post_type" value="work" id="work_type" {{ old('post_type') == 'work' ? 'checked' : '' }}>
+                        <span class="radio-text">🎬 作品関連（アニメ・映画・ドラマ）</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="post_type" value="song" id="song_type" {{ old('post_type') == 'song' ? 'checked' : '' }}>
+                        <span class="radio-text">🎵 楽曲関連（テーマソング・MV撮影地）</span>
+                    </label>
+                </div>
+            </div>
+
             <div class="form-row">
-                <div class="form-group">
+                <div class="form-group" id="work_name_group">
                     <label for="work_name" class="form-label">作品名</label>
                     <input type="text" name="work_name" id="work_name" value="{{ old('work_name') }}" class="form-input" placeholder="アニメ・映画・ドラマ名">
-                    <div class="field-hint">作品名を入力すると、テーマソングの項目が表示されます</div>
+                    <div class="field-hint">作品名を入力してください</div>
                 </div>
 
                 <div class="form-group" id="song_name_group" style="display: none;">
-                    <label for="song_name" class="form-label">テーマソング</label>
-                    <input type="text" name="song_name" id="song_name" value="{{ old('song_name') }}" class="form-input" placeholder="テーマソング・挿入歌・エンディング曲など">
-                    <div class="field-hint">作品のテーマソングや印象的な楽曲があれば入力してください</div>
+                    <label for="song_name" class="form-label">楽曲名</label>
+                    <input type="text" name="song_name" id="song_name" value="{{ old('song_name') }}" class="form-input" placeholder="テーマソング・挿入歌・MVの撮影地など">
+                    <div class="field-hint">楽曲名やMVの撮影地を入力してください</div>
                 </div>
             </div>
 
@@ -320,39 +373,49 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const workTypeRadio = document.getElementById('work_type');
+        const songTypeRadio = document.getElementById('song_type');
+        const workNameGroup = document.getElementById('work_name_group');
+        const songNameGroup = document.getElementById('song_name_group');
         const workNameInput = document.getElementById('work_name');
         const songNameInput = document.getElementById('song_name');
-        const songNameGroup = document.getElementById('song_name_group');
 
-        // 作品名が入力された時の処理
-        function handleWorkInput() {
-            const hasWorkName = workNameInput.value.trim() !== '';
+        // 投稿タイプが変更された時の処理
+        function handlePostTypeChange() {
+            if (workTypeRadio.checked) {
+                // 作品関連が選択された場合
+                workNameGroup.style.display = 'block';
+                songNameGroup.style.display = 'none';
+                songNameInput.value = ''; // 楽曲名をクリア
 
-            // 作品名が入力されている場合、テーマソング項目を表示
-            if (hasWorkName) {
+                // 作品名グループを強調表示
+                workNameGroup.style.backgroundColor = '#f0f4ff';
+                workNameGroup.style.border = '2px solid #667eea';
+                workNameGroup.style.borderRadius = '8px';
+                workNameGroup.style.padding = '10px';
+            } else if (songTypeRadio.checked) {
+                // 楽曲関連が選択された場合
+                workNameGroup.style.display = 'none';
                 songNameGroup.style.display = 'block';
+                workNameInput.value = ''; // 作品名をクリア
+
+                // 楽曲名グループを強調表示
                 songNameGroup.style.backgroundColor = '#f0f4ff';
                 songNameGroup.style.border = '2px solid #667eea';
                 songNameGroup.style.borderRadius = '8px';
                 songNameGroup.style.padding = '10px';
-                songNameGroup.style.marginTop = '10px';
-            } else {
-                songNameGroup.style.display = 'none';
-                songNameGroup.style.backgroundColor = '';
-                songNameGroup.style.border = '';
-                songNameGroup.style.borderRadius = '';
-                songNameGroup.style.padding = '';
-                songNameGroup.style.marginTop = '';
-                // 作品名が削除された場合、テーマソングの入力もクリア
-                songNameInput.value = '';
             }
         }
 
         // イベントリスナーを追加
-        workNameInput.addEventListener('input', handleWorkInput);
+        workTypeRadio.addEventListener('change', handlePostTypeChange);
+        songTypeRadio.addEventListener('change', handlePostTypeChange);
 
-        // 初期状態を設定
-        handleWorkInput();
+        // 初期状態を設定（デフォルトで作品関連を選択）
+        if (!workTypeRadio.checked && !songTypeRadio.checked) {
+            workTypeRadio.checked = true;
+        }
+        handlePostTypeChange();
     });
 </script>
 @endsection

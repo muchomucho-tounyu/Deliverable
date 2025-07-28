@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Cloudinary\Cloudinary as CloudinarySDK;
 
 class UserController extends Controller
 {
@@ -61,6 +62,15 @@ class UserController extends Controller
             $file = $request->file('image');
             if ($file && $file->isValid() && $file->getRealPath() && $file->getSize() > 0) {
                 try {
+                    // Cloudinary設定を明示的に行う
+                    $cloudinary = new CloudinarySDK([
+                        'cloud' => [
+                            'cloud_name' => config('cloudinary.cloud_name'),
+                            'api_key' => config('cloudinary.api_key'),
+                            'api_secret' => config('cloudinary.api_secret'),
+                        ]
+                    ]);
+
                     // Cloudinaryへアップロード
                     $imageUrl = \CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::upload($file->getRealPath())->getSecurePath();
                     $validated['image'] = $imageUrl;

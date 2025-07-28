@@ -102,7 +102,7 @@ class MapController extends Controller
             $keyword = $request->keyword;
             $query->where(function ($q) use ($keyword) {
                 $q->where('title', 'like', "%{$keyword}%")
-                    ->orWhere('content', 'like', "%{$keyword}%")
+                    ->orWhere('body', 'like', "%{$keyword}%")
                     ->orWhereHas('places', function ($placeQuery) use ($keyword) {
                         $placeQuery->where('name', 'like', "%{$keyword}%");
                     })
@@ -125,7 +125,7 @@ class MapController extends Controller
                 return [
                     'id' => $post->id,
                     'title' => $post->title,
-                    'content' => $post->content,
+                    'body' => $post->body,
                     'latitude' => $post->latitude,
                     'longitude' => $post->longitude,
                     'user' => $post->user->name,

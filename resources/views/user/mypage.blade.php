@@ -329,8 +329,7 @@ use Illuminate\Support\Str;
             👤
         </div>
         @endif
-        <!-- デバッグ用: 画像URLを表示 -->
-        <div style="color: white; font-size: 0.8rem; margin-top: 5px;">Debug: {{ $user->image }}</div>
+
 
         <div class="profile-name">{{ $user->name }}</div>
         <div class="profile-details">

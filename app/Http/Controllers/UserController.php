@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Cloudinary\Cloudinary as CloudinarySDK;
 
 class UserController extends Controller
 {
@@ -68,9 +68,17 @@ class UserController extends Controller
             ]);
 
             try {
-                // Cloudinaryへアップロード
-                $result = Cloudinary::upload($file->getRealPath());
-                $validated['image'] = $result->getSecurePath();
+                // Cloudinary SDKを直接使用
+                $cloudinary = new CloudinarySDK([
+                    'cloud' => [
+                        'cloud_name' => 'ddmyych6n',
+                        'api_key' => '441491558761823',
+                        'api_secret' => 's3PK6sJIr700UXhcCvQ5qBVFNJo',
+                    ]
+                ]);
+
+                $result = $cloudinary->uploadApi()->upload($file->getRealPath());
+                $validated['image'] = $result['secure_url'];
                 \Log::info('Cloudinary画像URL: ' . $validated['image']);
             } catch (\Exception $e) {
                 \Log::error('Cloudinaryアップロードエラー: ' . $e->getMessage());

@@ -34,6 +34,13 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
+        file_put_contents('/var/www/html/storage/logs/debug.log', 'UPDATE METHOD CALLED: ' . date('Y-m-d H:i:s') . "\n", FILE_APPEND);
+        \Log::info('=== UPDATE METHOD CALLED ===');
+        \Log::info('Request method: ' . $request->method());
+        \Log::info('Request URL: ' . $request->url());
+        \Log::info('All request data: ', $request->all());
+        \Log::info('Files: ', $request->allFiles());
+
         /** @var \App\Models\User $user */
         $user = auth()->user();
         if (!$user) {

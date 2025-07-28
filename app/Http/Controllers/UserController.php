@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
-use Cloudinary\Cloudinary as CloudinarySDK;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class UserController extends Controller
 {
@@ -81,35 +81,16 @@ class UserController extends Controller
             'files' => $request->allFiles()
         ]);
 
-        // 強制的にテスト用画像URLを設定
+        // Cloudinaryに画像をアップロード
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            \Log::info('ファイル情報', [
-                'file_name' => $file->getClientOriginalName(),
-                'file_size' => $file->getSize(),
-                'file_path' => $file->getRealPath(),
-                'file_valid' => $file->isValid()
-            ]);
-
             try {
-                // Cloudinary SDKを直接使用
-                $cloudinary = new CloudinarySDK([
-                    'cloud' => [
-                        'cloud_name' => 'ddmyych6n',
-                        'api_key' => '441491558761823',
-                        'api_secret' => 's3PK6sJIr700UXhcCvQ5qBVFNJo',
-                    ]
-                ]);
-
-                $result = $cloudinary->uploadApi()->upload($file->getRealPath());
-                $validated['image'] = $result['secure_url'];
+                $result = Cloudinary::upload($request->file('image')->getRealPath());
+                $validated['image'] = $result->getSecurePath();
                 \Log::info('Cloudinary画像URL: ' . $validated['image']);
             } catch (\Exception $e) {
                 \Log::error('Cloudinaryアップロードエラー: ' . $e->getMessage());
-                return back()->withErrors(['image' => '画像のアップロードに失敗しました: ' . $e->getMessage()]);
+                return back()->withErrors(['image' => '画像のアップロードに失敗しました']);
             }
-        } else {
-            \Log::info('画像が選択されていません');
         }
 
         // 更新

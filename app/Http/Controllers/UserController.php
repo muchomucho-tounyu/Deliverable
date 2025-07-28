@@ -50,11 +50,18 @@ class UserController extends Controller
         ]);
 
         // プロフィール画像アップロード（画像が選択された場合のみ）
+        \Log::info('画像アップロード処理開始', [
+            'has_file' => $request->hasFile('image'),
+            'file_valid' => $request->hasFile('image') ? $request->file('image')->isValid() : false,
+            'file_size' => $request->hasFile('image') ? $request->file('image')->getSize() : 0
+        ]);
+
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
             $file = $request->file('image');
             if ($file->getSize() > 0) {
                 try {
                     // Cloudinaryへアップロード
+                    \Log::info('Cloudinaryアップロード開始');
                     $result = Cloudinary::upload($file->getRealPath());
                     $validated['image'] = $result->getSecurePath();
                     \Log::info('Cloudinary画像URL: ' . $validated['image']);

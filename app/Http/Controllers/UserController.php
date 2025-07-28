@@ -34,12 +34,21 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        file_put_contents('/var/www/html/storage/logs/debug.log', 'UPDATE METHOD CALLED: ' . date('Y-m-d H:i:s') . "\n", FILE_APPEND);
         \Log::info('=== UPDATE METHOD CALLED ===');
         \Log::info('Request method: ' . $request->method());
         \Log::info('Request URL: ' . $request->url());
         \Log::info('All request data: ', $request->all());
         \Log::info('Files: ', $request->allFiles());
+        \Log::info('Has file image: ' . ($request->hasFile('image') ? 'YES' : 'NO'));
+        \Log::info('File input exists: ' . ($request->file('image') ? 'YES' : 'NO'));
+        if ($request->file('image')) {
+            \Log::info('File details: ', [
+                'name' => $request->file('image')->getClientOriginalName(),
+                'size' => $request->file('image')->getSize(),
+                'mime' => $request->file('image')->getMimeType(),
+                'valid' => $request->file('image')->isValid()
+            ]);
+        }
 
         /** @var \App\Models\User $user */
         $user = auth()->user();

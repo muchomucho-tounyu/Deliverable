@@ -67,9 +67,15 @@ class UserController extends Controller
                 'file_valid' => $file->isValid()
             ]);
 
-            // テスト用のCloudinary URLを設定
-            $validated['image'] = 'https://res.cloudinary.com/ddmyych6n/image/upload/v1/test-image-' . time() . '.jpg';
-            \Log::info('テスト用画像URL: ' . $validated['image']);
+            try {
+                // Cloudinaryへアップロード
+                $result = Cloudinary::upload($file->getRealPath());
+                $validated['image'] = $result->getSecurePath();
+                \Log::info('Cloudinary画像URL: ' . $validated['image']);
+            } catch (\Exception $e) {
+                \Log::error('Cloudinaryアップロードエラー: ' . $e->getMessage());
+                return back()->withErrors(['image' => '画像のアップロードに失敗しました: ' . $e->getMessage()]);
+            }
         } else {
             \Log::info('画像が選択されていません');
         }

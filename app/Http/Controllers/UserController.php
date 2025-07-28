@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-use Cloudinary\Cloudinary as CloudinarySDK;
 
 class UserController extends Controller
 {
@@ -35,13 +34,6 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        // Cloudinary設定値をログ出力
-        \Log::info('cloudinary config', [
-            'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-            'api_key' => env('CLOUDINARY_API_KEY'),
-            'api_secret' => env('CLOUDINARY_API_SECRET'),
-            'url' => env('CLOUDINARY_URL'),
-        ]);
         /** @var \App\Models\User $user */
         $user = auth()->user();
         if (!$user) {
@@ -58,27 +50,17 @@ class UserController extends Controller
         ]);
 
         // プロフィール画像アップロード（画像が選択された場合のみ）
-        if ($request->hasFile('image')) {
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
             $file = $request->file('image');
-            if ($file && $file->isValid() && $file->getRealPath() && $file->getSize() > 0) {
+            if ($file->getSize() > 0) {
                 try {
-                    // Cloudinary設定を明示的に行う
-                    $cloudinary = new CloudinarySDK([
-                        'cloud' => [
-                            'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                            'api_key' => env('CLOUDINARY_API_KEY'),
-                            'api_secret' => env('CLOUDINARY_API_SECRET'),
-                        ]
-                    ]);
-
                     // Cloudinaryへアップロード
-                    $imageUrl = $cloudinary->uploadApi()->upload($file->getRealPath())['secure_url'];
-                    $validated['image'] = $imageUrl;
-                    \Log::info('Cloudinary画像URL: ' . $imageUrl);
+                    $result = Cloudinary::upload($file->getRealPath());
+                    $validated['image'] = $result->getSecurePath();
+                    \Log::info('Cloudinary画像URL: ' . $validated['image']);
                 } catch (\Exception $e) {
                     \Log::error('Cloudinaryアップロードエラー: ' . $e->getMessage());
-                    // Cloudinaryアップロード失敗時はエラーを投げる
-                    throw $e;
+                    return back()->withErrors(['image' => '画像のアップロードに失敗しました。']);
                 }
             }
         }

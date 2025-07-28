@@ -41,9 +41,9 @@ return [
     | Cloudinary API credentials for authentication
     |
     */
-    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-    'api_key' => env('CLOUDINARY_API_KEY'),
-    'api_secret' => env('CLOUDINARY_API_SECRET'),
+    'cloud_name' => env('CLOUDINARY_CLOUD_NAME', 'ddmyych6n'),
+    'api_key' => env('CLOUDINARY_API_KEY', '441491558761823'),
+    'api_secret' => env('CLOUDINARY_API_SECRET', 's3PK6sJIr700UXhcCvQ5qBVFNJo'),
 
     /**
      * Upload Preset From Cloudinary Dashboard

@@ -53,7 +53,8 @@ class UserController extends Controller
         \Log::info('画像アップロード処理開始', [
             'has_file' => $request->hasFile('image'),
             'file_valid' => $request->hasFile('image') ? $request->file('image')->isValid() : false,
-            'file_size' => $request->hasFile('image') ? $request->file('image')->getSize() : 0
+            'file_size' => $request->hasFile('image') ? $request->file('image')->getSize() : 0,
+            'all_files' => $request->allFiles()
         ]);
 
         if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -70,6 +71,8 @@ class UserController extends Controller
                     return back()->withErrors(['image' => '画像のアップロードに失敗しました。']);
                 }
             }
+        } else {
+            \Log::info('画像が選択されていないか、無効です');
         }
 
         // 更新

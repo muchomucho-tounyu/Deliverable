@@ -28,10 +28,10 @@ class MapController extends Controller
                         $personQuery->where('name', 'like', "%{$keyword}%");
                     })
                     ->orWhereHas('works', function ($workQuery) use ($keyword) {
-                        $workQuery->where('title', 'like', "%{$keyword}%");
+                        $workQuery->where('name', 'like', "%{$keyword}%");
                     })
                     ->orWhereHas('songs', function ($songQuery) use ($keyword) {
-                        $songQuery->where('title', 'like', "%{$keyword}%");
+                        $songQuery->where('name', 'like', "%{$keyword}%");
                     });
             });
         }
@@ -110,10 +110,10 @@ class MapController extends Controller
                         $personQuery->where('name', 'like', "%{$keyword}%");
                     })
                     ->orWhereHas('works', function ($workQuery) use ($keyword) {
-                        $workQuery->where('title', 'like', "%{$keyword}%");
+                        $workQuery->where('name', 'like', "%{$keyword}%");
                     })
                     ->orWhereHas('songs', function ($songQuery) use ($keyword) {
-                        $songQuery->where('title', 'like', "%{$keyword}%");
+                        $songQuery->where('name', 'like', "%{$keyword}%");
                     });
             });
         }
@@ -131,8 +131,8 @@ class MapController extends Controller
                     'user' => $post->user->name,
                     'places' => $post->places->pluck('name'),
                     'people' => $post->people->pluck('name'),
-                    'works' => $post->works->pluck('title'),
-                    'songs' => $post->songs->pluck('title'),
+                    'works' => $post->works->pluck('name'),
+                    'songs' => $post->songs->pluck('name'),
                     'url' => route('posts.show', $post->id)
                 ];
             })

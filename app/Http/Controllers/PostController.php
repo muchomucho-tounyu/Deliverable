@@ -95,16 +95,24 @@ class PostController extends Controller
             $imageUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
         }
 
-        Post::create([
+        $post = Post::create([
             'user_id' => auth()->id(),
             'title' => $data['title'],
-            'work_id' => $work?->id,
-            'song_id' => $song?->id,
-            'place_id' => $place->id,
             'image' => $imageUrl,
             'body' => $data['body'],
             'visited' => $request->boolean('visited'),
         ]);
+
+        // 多対多の関係を設定
+        if ($place) {
+            $post->places()->attach($place->id);
+        }
+        if ($work) {
+            $post->works()->attach($work->id);
+        }
+        if ($song) {
+            $post->songs()->attach($song->id);
+        }
 
         return redirect()->route('posts.index')->with('success', '投稿が完了しました！');
     }
@@ -170,11 +178,13 @@ class PostController extends Controller
         }
 
         $post->title = $data['title'];
-        $post->work_id = $work?->id;
-        $post->song_id = $song?->id;
-        $post->place_id = $place->id;
         $post->body = $data['body'] ?? null;
         $post->save();
+
+        // 多対多の関係を更新
+        $post->places()->sync([$place->id]);
+        $post->works()->sync($work ? [$work->id] : []);
+        $post->songs()->sync($song ? [$song->id] : []);
 
         return redirect()->route('posts.show', $post)->with('success', '投稿が更新されました。');
     }

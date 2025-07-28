@@ -58,26 +58,28 @@ class UserController extends Controller
             'request_all' => $request->all()
         ]);
 
-        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+        // 強制的にCloudinaryアップロードをテスト
+        if ($request->hasFile('image')) {
             $file = $request->file('image');
-            if ($file->getSize() > 0) {
-                try {
-                    // Cloudinaryへアップロード
-                    \Log::info('Cloudinaryアップロード開始');
-                    $result = Cloudinary::upload($file->getRealPath());
-                    $validated['image'] = $result->getSecurePath();
-                    \Log::info('Cloudinary画像URL: ' . $validated['image']);
-                } catch (\Exception $e) {
-                    \Log::error('Cloudinaryアップロードエラー: ' . $e->getMessage());
-                    return back()->withErrors(['image' => '画像のアップロードに失敗しました。']);
-                }
+            \Log::info('ファイル情報', [
+                'file_name' => $file->getClientOriginalName(),
+                'file_size' => $file->getSize(),
+                'file_path' => $file->getRealPath(),
+                'file_valid' => $file->isValid()
+            ]);
+
+            try {
+                // Cloudinaryへアップロード
+                \Log::info('Cloudinaryアップロード開始');
+                $result = Cloudinary::upload($file->getRealPath());
+                $validated['image'] = $result->getSecurePath();
+                \Log::info('Cloudinary画像URL: ' . $validated['image']);
+            } catch (\Exception $e) {
+                \Log::error('Cloudinaryアップロードエラー: ' . $e->getMessage());
+                return back()->withErrors(['image' => '画像のアップロードに失敗しました: ' . $e->getMessage()]);
             }
         } else {
-            \Log::info('画像が選択されていないか、無効です');
-            // 画像が選択されていない場合、既存の画像URLを保持
-            if (!$request->hasFile('image')) {
-                unset($validated['image']); // imageフィールドを更新対象から除外
-            }
+            \Log::info('画像が選択されていません');
         }
 
         // 更新

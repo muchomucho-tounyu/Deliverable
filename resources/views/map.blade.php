@@ -172,7 +172,7 @@
     </a>
     <!-- 検索ヘッダー -->
     <div class="search-header">
-        <form id="searchForm" class="search-form" method="GET" action="{{ route('map.index') }}">
+        <form id="searchForm" class="search-form" method="GET" action="{{ route('map') }}">
             <input type="text" name="keyword" id="keyword" placeholder="🔍 キーワード検索"
                 class="search-input" value="{{ request('keyword') }}">
 
@@ -192,12 +192,13 @@
     </div>
 
     <script>
+        var posts = @json($posts);
+    </script>
+
+    <script>
         var map;
         var markers = [];
         var currentLocationMarker;
-        var posts = {
-            !!json_encode($posts) !!
-        };
 
         function initMap() {
             // 最初の投稿があればその位置を中心に、なければ日本の中心

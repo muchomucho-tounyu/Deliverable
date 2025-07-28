@@ -167,7 +167,7 @@
 
 <body>
     <!-- 検索に戻るボタン -->
-    <a href="{{ url()->previous() }}" class="back-to-search-btn" title="検索に戻る">
+    <a href="{{ route('posts.index') }}" class="back-to-search-btn" title="一覧に戻る">
         <span style="font-size:2em;line-height:1;">&lt;</span>
     </a>
     <!-- 検索ヘッダー -->

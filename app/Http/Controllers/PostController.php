@@ -67,12 +67,14 @@ class PostController extends Controller
         $request->merge([
             'work_name' => trim($request->input('work_name')) ?: null,
             'song_name' => trim($request->input('song_name')) ?: null,
+            'person_name' => trim($request->input('person_name')) ?: null,
         ]);
 
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'work_name' => 'required_without:song_name|nullable|string|max:255',
             'song_name' => 'required_without:work_name|nullable|string|max:255',
+            'person_name' => 'nullable|string|max:255',
             'place_name' => 'required|string|max:255',
             'body' => 'nullable|string',
             'visited' => 'nullable|boolean',
@@ -86,6 +88,10 @@ class PostController extends Controller
         $song = null;
         if (!empty($data['song_name'])) {
             $song = Song::firstOrCreate(['name' => $data['song_name']]);
+        }
+        $person = null;
+        if (!empty($data['person_name'])) {
+            $person = Person::firstOrCreate(['name' => $data['person_name']]);
         }
         $place = Place::firstOrCreate(['name' => $data['place_name']]);
 
@@ -112,6 +118,9 @@ class PostController extends Controller
         }
         if ($song) {
             $post->songs()->attach($song->id);
+        }
+        if ($person) {
+            $post->people()->attach($person->id);
         }
 
         return redirect()->route('posts.index')->with('success', '投稿が完了しました！');

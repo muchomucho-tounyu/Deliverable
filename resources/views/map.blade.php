@@ -97,20 +97,6 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        .search-select {
-            padding: 10px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 14px;
-            background: white;
-            transition: all 0.3s ease;
-        }
-
-        .search-select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
         .btn-primary {
             background: #667eea;
             color: white;
@@ -163,8 +149,7 @@
                 gap: 10px;
             }
 
-            .search-input,
-            .search-select {
+            .search-input {
                 max-width: none;
                 width: 100%;
             }
@@ -187,17 +172,9 @@
     </a>
     <!-- 検索ヘッダー -->
     <div class="search-header">
-        <form id="searchForm" class="search-form">
+        <form id="searchForm" class="search-form" method="GET" action="{{ route('map.index') }}">
             <input type="text" name="keyword" id="keyword" placeholder="🔍 キーワード検索"
-                class="search-input">
-
-            <select name="category" id="category" class="search-select">
-                <option value="">📂 すべて</option>
-                <option value="places">🏛️ 場所</option>
-                <option value="people">👥 人物</option>
-                <option value="works">🎬 作品</option>
-                <option value="songs">🎵 楽曲</option>
-            </select>
+                class="search-input" value="{{ request('keyword') }}">
 
             <button type="button" id="currentLocation" class="btn-secondary">
                 📍 現在地
@@ -215,14 +192,16 @@
     </div>
 
     <script>
-        let map;
-        let markers = [];
-        let currentLocationMarker;
-        const posts = @json($posts);
+        var map;
+        var markers = [];
+        var currentLocationMarker;
+        var posts = {
+            !!json_encode($posts) !!
+        };
 
         function initMap() {
             // 最初の投稿があればその位置を中心に、なければ日本の中心
-            const center = posts.length > 0 ? {
+            var center = posts.length > 0 ? {
                 lat: parseFloat(posts[0].latitude),
                 lng: parseFloat(posts[0].longitude)
             } : {
@@ -257,7 +236,7 @@
             posts.forEach(function(post) {
                 if (post.latitude && post.longitude) {
                     // カスタムマーカーアイコン（iPhone風のピン）
-                    const markerIcon = {
+                    var markerIcon = {
                         path: google.maps.SymbolPath.CIRCLE,
                         scale: 8,
                         fillColor: '#667eea',
@@ -266,7 +245,7 @@
                         strokeWeight: 2
                     };
 
-                    const marker = new google.maps.Marker({
+                    var marker = new google.maps.Marker({
                         position: {
                             lat: parseFloat(post.latitude),
                             lng: parseFloat(post.longitude)
@@ -283,12 +262,12 @@
 
                     // クリックで投稿詳細ページに遷移
                     marker.addListener('click', function() {
-                        window.location.href = `/posts/${post.id}`;
+                        window.location.href = '/posts/' + post.id;
                     });
 
                     // ズームレベルに応じてラベルを表示/非表示
                     google.maps.event.addListener(map, 'zoom_changed', function() {
-                        const zoom = map.getZoom();
+                        var zoom = map.getZoom();
                         if (zoom >= 12) {
                             marker.setLabel({
                                 text: post.title || '投稿',
@@ -307,16 +286,15 @@
 
         // 検索フォームの処理
         document.getElementById('searchForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            performSearch();
+            // 通常のフォーム送信のままにする（AJAXは使用しない）
         });
 
         // 現在地取得
         document.getElementById('currentLocation').addEventListener('click', function() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
 
                     // 現在地マーカーを表示
                     if (currentLocationMarker) {
@@ -342,43 +320,32 @@
                     });
                     map.setZoom(12);
 
-                    // 現在地周辺を検索
-                    performSearch(lat, lng, 5); // 5km範囲
+                    // 現在地周辺を検索（フォームに位置情報を追加して送信）
+                    var form = document.getElementById('searchForm');
+                    var latInput = document.createElement('input');
+                    latInput.type = 'hidden';
+                    latInput.name = 'lat';
+                    latInput.value = lat;
+                    form.appendChild(latInput);
+
+                    var lngInput = document.createElement('input');
+                    lngInput.type = 'hidden';
+                    lngInput.name = 'lng';
+                    lngInput.value = lng;
+                    form.appendChild(lngInput);
+
+                    var radiusInput = document.createElement('input');
+                    radiusInput.type = 'hidden';
+                    radiusInput.name = 'radius';
+                    radiusInput.value = '5';
+                    form.appendChild(radiusInput);
+
+                    form.submit();
                 });
             } else {
                 alert('位置情報を取得できませんでした。');
             }
         });
-
-        function performSearch(lat, lng, radius) {
-            var formData = new FormData(document.getElementById('searchForm'));
-            var params = new URLSearchParams();
-
-            // フォームデータをパラメータに追加
-            for (var i = 0; i < formData.entries().length; i++) {
-                var entry = formData.entries()[i];
-                if (entry[1]) params.append(entry[0], entry[1]);
-            }
-
-            // 位置情報がある場合は追加
-            if (lat && lng && radius) {
-                params.append('lat', lat);
-                params.append('lng', lng);
-                params.append('radius', radius);
-            }
-
-            // AJAXで検索実行
-            fetch('/map/search?' + params.toString())
-                .then(function(response) {
-                    return response.json();
-                })
-                .then(function(data) {
-                    displayMarkers(data.posts);
-                })
-                .catch(function(error) {
-                    console.error('検索エラー:', error);
-                });
-        }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initMap" async defer></script>
 </body>

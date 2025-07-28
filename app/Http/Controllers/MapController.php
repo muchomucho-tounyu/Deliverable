@@ -20,7 +20,7 @@ class MapController extends Controller
             $keyword = $request->keyword;
             $query->where(function ($q) use ($keyword) {
                 $q->where('title', 'like', "%{$keyword}%")
-                    ->orWhere('content', 'like', "%{$keyword}%")
+                    ->orWhere('body', 'like', "%{$keyword}%")
                     ->orWhereHas('places', function ($placeQuery) use ($keyword) {
                         $placeQuery->where('name', 'like', "%{$keyword}%");
                     })

@@ -55,6 +55,13 @@ use Illuminate\Support\Str;
             </select>
         </div>
 
+        <!-- 自己紹介 -->
+        <div class="mb-4">
+            <label for="bio" class="block font-semibold mb-1">自己紹介</label>
+            <textarea id="bio" name="bio" rows="4" placeholder="自己紹介を入力してください（最大1000文字）"
+                class="w-full border rounded px-3 py-2">{{ old('bio', $user->bio) }}</textarea>
+        </div>
+
         <!-- 画像 -->
         <div class="mb-4">
             <label for="image" class="block font-semibold mb-1">プロフィール画像</label>

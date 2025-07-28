@@ -345,6 +345,11 @@ use Illuminate\Support\Str;
             @endif
             {{ $user->age || $user->sex ? '・' : '' }}{{ $user->created_at->format('Y年m月') }}から利用中
         </div>
+        @if($user->bio)
+        <div class="profile-bio mt-3 p-3 bg-white bg-opacity-10 rounded-lg text-sm">
+            {{ $user->bio }}
+        </div>
+        @endif
 
         <div class="profile-follows">
             <span class="profile-follow-link" onclick="openFollowModal('followings')">フォロー <span class="profile-follow-count">{{ $user->followings->count() }}</span></span>

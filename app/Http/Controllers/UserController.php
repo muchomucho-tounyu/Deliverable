@@ -62,6 +62,7 @@ class UserController extends Controller
             'age' => ['nullable', 'integer', 'min:0'],
             'sex' => ['nullable', 'in:male,female,other'],
             'image' => ['nullable', 'image', 'max:2048'],
+            'bio' => ['nullable', 'string', 'max:1000'],
         ]);
 
         // プロフィール画像アップロード（画像が選択された場合のみ）

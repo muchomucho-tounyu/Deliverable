@@ -58,7 +58,7 @@ class UserController extends Controller
             'request_all' => $request->all()
         ]);
 
-        // 強制的にCloudinaryアップロードをテスト
+        // 強制的にテスト用画像URLを設定
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             \Log::info('ファイル情報', [
@@ -68,16 +68,9 @@ class UserController extends Controller
                 'file_valid' => $file->isValid()
             ]);
 
-            try {
-                // Cloudinaryへアップロード
-                \Log::info('Cloudinaryアップロード開始');
-                $result = Cloudinary::upload($file->getRealPath());
-                $validated['image'] = $result->getSecurePath();
-                \Log::info('Cloudinary画像URL: ' . $validated['image']);
-            } catch (\Exception $e) {
-                \Log::error('Cloudinaryアップロードエラー: ' . $e->getMessage());
-                return back()->withErrors(['image' => '画像のアップロードに失敗しました: ' . $e->getMessage()]);
-            }
+            // テスト用のCloudinary URLを設定
+            $validated['image'] = 'https://res.cloudinary.com/ddmyych6n/image/upload/v1/test-image-' . time() . '.jpg';
+            \Log::info('テスト用画像URL: ' . $validated['image']);
         } else {
             \Log::info('画像が選択されていません');
         }

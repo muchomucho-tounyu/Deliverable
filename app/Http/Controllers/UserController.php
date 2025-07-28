@@ -37,10 +37,10 @@ class UserController extends Controller
     {
         // Cloudinary設定値をログ出力
         \Log::info('cloudinary config', [
-            'cloud_name' => config('cloudinary.cloud_name'),
-            'api_key' => config('cloudinary.api_key'),
-            'api_secret' => config('cloudinary.api_secret'),
-            'url' => config('cloudinary.url'),
+            'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+            'api_key' => env('CLOUDINARY_API_KEY'),
+            'api_secret' => env('CLOUDINARY_API_SECRET'),
+            'url' => env('CLOUDINARY_URL'),
         ]);
         /** @var \App\Models\User $user */
         $user = auth()->user();
@@ -65,14 +65,14 @@ class UserController extends Controller
                     // Cloudinary設定を明示的に行う
                     $cloudinary = new CloudinarySDK([
                         'cloud' => [
-                            'cloud_name' => config('cloudinary.cloud_name'),
-                            'api_key' => config('cloudinary.api_key'),
-                            'api_secret' => config('cloudinary.api_secret'),
+                            'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                            'api_key' => env('CLOUDINARY_API_KEY'),
+                            'api_secret' => env('CLOUDINARY_API_SECRET'),
                         ]
                     ]);
 
                     // Cloudinaryへアップロード
-                    $imageUrl = \CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::upload($file->getRealPath())->getSecurePath();
+                    $imageUrl = $cloudinary->uploadApi()->upload($file->getRealPath())['secure_url'];
                     $validated['image'] = $imageUrl;
                     \Log::info('Cloudinary画像URL: ' . $imageUrl);
                 } catch (\Exception $e) {

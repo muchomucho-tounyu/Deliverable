@@ -68,6 +68,13 @@ class UserController extends Controller
         // 更新
         $user->update($validated);
 
+        // 更新後のユーザー情報をログ出力
+        \Log::info('ユーザー更新完了', [
+            'user_id' => $user->id,
+            'image_url' => $user->fresh()->image,
+            'all_data' => $user->fresh()->toArray()
+        ]);
+
         return redirect()->route('mypage')->with('success', 'プロフィールを更新しました。');
     }
 

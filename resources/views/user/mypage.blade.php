@@ -318,7 +318,9 @@ use Illuminate\Support\Str;
 <!-- 表示モード -->
 <div class="profile-header">
     <div class="profile-info">
+        <!-- デバッグ用: 画像URLを表示 -->
         @if($user->image)
+        <div style="color: white; font-size: 0.8rem; margin-bottom: 10px;">Debug: {{ $user->image }}</div>
         @if(Str::startsWith($user->image, ['http://', 'https://']))
         <img src="{{ $user->image }}" alt="プロフィール画像" class="profile-avatar">
         @else

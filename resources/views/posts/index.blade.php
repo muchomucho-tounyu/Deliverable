@@ -158,12 +158,12 @@ use Illuminate\Support\Str;
             <span>by
                 @if($post->user->image)
                 @if(Str::startsWith($post->user->image, ['http://', 'https://']))
-                <img src="{{ $post->user->image }}" alt="ユーザーアイコン" class="inline w-4 h-4 rounded-full object-cover mr-1">
+                <img src="{{ $post->user->image }}" alt="ユーザーアイコン" class="inline w-8 h-8 rounded-full object-cover mr-1">
                 @else
-                <img src="{{ asset($post->user->image) }}" alt="ユーザーアイコン" class="inline w-4 h-4 rounded-full object-cover mr-1">
+                <img src="{{ asset($post->user->image) }}" alt="ユーザーアイコン" class="inline w-8 h-8 rounded-full object-cover mr-1">
                 @endif
                 @else
-                <img src="{{ asset('images/default-user.png') }}" alt="デフォルトアイコン" class="inline w-4 h-4 rounded-full object-cover mr-1">
+                <img src="{{ asset('images/default-user.png') }}" alt="デフォルトアイコン" class="inline w-8 h-8 rounded-full object-cover mr-1">
                 @endif
                 {{ $post->user->name }}
             </span>

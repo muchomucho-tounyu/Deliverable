@@ -34,7 +34,7 @@ Route::get('/search', [PostController::class, 'index'])->name('posts.search');
 
 Route::get('/posts/{post}/edit', [PostController::class, 'edit']);
 Route::put('/posts/{post}', [PostController::class, 'update']);
-Route::delete('/posts/{post}', [PostController::class, 'delete']);
+Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
 
 Route::post('/posts/{post}/favorite', [FavoriteController::class, 'toggle'])->middleware('auth')->name('posts.favorite');

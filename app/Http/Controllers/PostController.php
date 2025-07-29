@@ -41,7 +41,7 @@ class PostController extends Controller
             });
         }
 
-        $posts = $query->orderBy('updated_at', 'desc')->paginate(10);
+        $posts = $query->groupBy('posts.id')->orderBy('updated_at', 'desc')->paginate(10);
 
         // デバッグ用：投稿数をログ出力
         \Log::info('投稿数: ' . $posts->count() . ', 総投稿数: ' . Post::count());
@@ -202,12 +202,12 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(Post $post)
+    public function destroy(Post $post)
     {
         $post->delete();
 
         return redirect()->route('posts.index')->with('success', '投稿が削除されました。');
-    } //
+    }
 
 
 

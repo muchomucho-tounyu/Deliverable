@@ -28,6 +28,17 @@ class UserController extends Controller
                 'followings',
                 'followers',
             ]);
+
+            // デバッグ用：リレーションデータをログ出力
+            \Log::info('Mypage データ確認', [
+                'user_id' => $user->id,
+                'posts_count' => $user->posts->count(),
+                'favorites_count' => $user->favorites->count(),
+                'visits_count' => $user->visits->count(),
+                'posts_with_images' => $user->posts->whereNotNull('image_path')->count(),
+                'favorites_with_images' => $user->favorites->whereNotNull('image_path')->count(),
+                'visits_with_images' => $user->visits->whereNotNull('image_path')->count(),
+            ]);
         }
         return view('user.mypage', compact('user'));
     }

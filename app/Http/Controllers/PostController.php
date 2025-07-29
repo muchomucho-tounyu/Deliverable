@@ -25,20 +25,39 @@ class PostController extends Controller
         if (!empty($keyword)) {
             $postIds->where(function ($q) use ($keyword) {
                 $q->where('posts.title', 'like', "%{$keyword}%")
-                    ->orWhereHas('user', function ($subQ) use ($keyword) {
-                        $subQ->where('name', 'like', "%{$keyword}%");
+                    ->orWhereExists(function ($subQ) use ($keyword) {
+                        $subQ->select(\DB::raw(1))
+                            ->from('users')
+                            ->whereColumn('users.id', 'posts.user_id')
+                            ->where('users.name', 'like', "%{$keyword}%");
                     })
-                    ->orWhereHas('work', function ($subQ) use ($keyword) {
-                        $subQ->where('name', 'like', "%{$keyword}%");
+                    ->orWhereExists(function ($subQ) use ($keyword) {
+                        $subQ->select(\DB::raw(1))
+                            ->from('works')
+                            ->join('post_work', 'works.id', '=', 'post_work.work_id')
+                            ->whereColumn('post_work.post_id', 'posts.id')
+                            ->where('works.name', 'like', "%{$keyword}%");
                     })
-                    ->orWhereHas('song', function ($subQ) use ($keyword) {
-                        $subQ->where('name', 'like', "%{$keyword}%");
+                    ->orWhereExists(function ($subQ) use ($keyword) {
+                        $subQ->select(\DB::raw(1))
+                            ->from('songs')
+                            ->join('post_song', 'songs.id', '=', 'post_song.song_id')
+                            ->whereColumn('post_song.post_id', 'posts.id')
+                            ->where('songs.name', 'like', "%{$keyword}%");
                     })
-                    ->orWhereHas('place', function ($subQ) use ($keyword) {
-                        $subQ->where('name', 'like', "%{$keyword}%");
+                    ->orWhereExists(function ($subQ) use ($keyword) {
+                        $subQ->select(\DB::raw(1))
+                            ->from('places')
+                            ->join('place_post', 'places.id', '=', 'place_post.place_id')
+                            ->whereColumn('place_post.post_id', 'posts.id')
+                            ->where('places.name', 'like', "%{$keyword}%");
                     })
-                    ->orWhereHas('people', function ($subQ) use ($keyword) {
-                        $subQ->where('name', 'like', "%{$keyword}%");
+                    ->orWhereExists(function ($subQ) use ($keyword) {
+                        $subQ->select(\DB::raw(1))
+                            ->from('people')
+                            ->join('person_post', 'people.id', '=', 'person_post.person_id')
+                            ->whereColumn('person_post.post_id', 'posts.id')
+                            ->where('people.name', 'like', "%{$keyword}%");
                     });
             });
         }

@@ -57,6 +57,39 @@ use Illuminate\Support\Str;
         margin-bottom: 15px;
     }
 
+    /* Twitter風のユーザー情報スタイル */
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #e1e8ed;
+    }
+
+    .user-details {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .user-name {
+        font-weight: 700;
+        color: #14171a;
+        font-size: 0.95rem;
+    }
+
+    .post-date {
+        color: #657786;
+        font-size: 0.85rem;
+    }
+
     .action-buttons {
         display: flex;
         gap: 15px;
@@ -153,21 +186,23 @@ use Illuminate\Support\Str;
         {{-- タイトル --}}
         <h2 class="post-title"><a href="{{ route('posts.show', $post) }}">{{ $post->title }}</a></h2>
 
-        <!-- 投稿者情報 -->
+        <!-- 投稿者情報（Twitter風） -->
         <div class="post-info">
-            <span>by
+            <div class="user-info">
                 @if($post->user->image)
                 @if(Str::startsWith($post->user->image, ['http://', 'https://']))
-                <img src="{{ $post->user->image }}" alt="ユーザーアイコン" class="inline w-6 h-6 rounded-full object-cover mr-1">
+                <img src="{{ $post->user->image }}" alt="ユーザーアイコン" class="user-avatar">
                 @else
-                <img src="{{ asset($post->user->image) }}" alt="ユーザーアイコン" class="inline w-6 h-6 rounded-full object-cover mr-1">
+                <img src="{{ asset($post->user->image) }}" alt="ユーザーアイコン" class="user-avatar">
                 @endif
                 @else
-                <img src="{{ asset('images/default-user.png') }}" alt="デフォルトアイコン" class="inline w-6 h-6 rounded-full object-cover mr-1">
+                <img src="{{ asset('images/default-user.png') }}" alt="デフォルトアイコン" class="user-avatar">
                 @endif
-                {{ $post->user->name }}
-            </span>
-            <span>• {{ $post->created_at->format('Y年m月d日') }}</span>
+                <div class="user-details">
+                    <span class="user-name">{{ $post->user->name }}</span>
+                    <span class="post-date">{{ $post->created_at->format('Y年m月d日') }}</span>
+                </div>
+            </div>
         </div>
 
         <!-- 場所名と作品名 -->

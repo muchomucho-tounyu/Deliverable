@@ -9,7 +9,7 @@
 use Illuminate\Support\Str;
 @endphp
 
-<div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+<div style="max-width: 800px; margin: 0 auto; padding: 20px; padding-top: 80px;">
     <div style="background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);">
         <h2 style="font-size: 1.8rem; font-weight: bold; color: #1f2937; margin-bottom: 30px; text-align: center;">投稿を編集</h2>
 

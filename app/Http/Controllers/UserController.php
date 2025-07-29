@@ -15,15 +15,21 @@ class UserController extends Controller
         $user = Auth::user();
         if ($user) {
             $user->load([
-                'posts',
-                'favorites',
+                'posts' => function ($query) {
+                    $query->orderBy('updated_at', 'desc');
+                },
+                'favorites' => function ($query) {
+                    $query->orderBy('updated_at', 'desc');
+                },
                 'favorites.user',
-                'visits',
+                'visits' => function ($query) {
+                    $query->orderBy('updated_at', 'desc');
+                },
                 'followings',
                 'followers',
             ]);
         }
-        return view('user.mypage', compact('user')); //
+        return view('user.mypage', compact('user'));
     }
 
     public function edit($id)

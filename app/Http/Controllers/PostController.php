@@ -20,7 +20,8 @@ class PostController extends Controller
         $keyword = $request->input('keyword');
 
         // まず投稿IDを取得（重複なし）
-        $postIds = Post::select('posts.id')->distinct();
+        $postIds = Post::select('posts.id');
+
         if (!empty($keyword)) {
             $postIds->where(function ($q) use ($keyword) {
                 $q->where('posts.title', 'like', "%{$keyword}%")
@@ -49,7 +50,7 @@ class PostController extends Controller
             ->paginate(10);
 
         // デバッグ用：投稿数をログ出力
-        \Log::info('投稿数: ' . $posts->count() . ', 総投稿数: ' . Post::count());
+        \Log::info('投稿数: ' . $posts->count() . ', 総投稿数: ' . Post::count() . ', ページ数: ' . $posts->lastPage());
 
         return view('posts.index', compact('posts'));
     }

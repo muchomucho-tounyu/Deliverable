@@ -19,8 +19,8 @@ class PostController extends Controller
     {
         $keyword = $request->input('keyword');
 
-        // まず投稿IDを取得
-        $postIds = Post::select('posts.id');
+        // まず投稿IDを取得（重複なし）
+        $postIds = Post::select('posts.id')->distinct();
         if (!empty($keyword)) {
             $postIds->where(function ($q) use ($keyword) {
                 $q->where('posts.title', 'like', "%{$keyword}%")

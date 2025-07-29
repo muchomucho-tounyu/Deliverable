@@ -152,6 +152,13 @@ use Illuminate\Support\Str;
         margin-top: 5px;
     }
 
+    .post-image {
+        max-width: 150px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
     .empty-state {
         text-align: center;
         padding: 40px 20px;
@@ -376,6 +383,15 @@ use Illuminate\Support\Str;
 <div id="posts" class="tab-content active">
     @forelse($user->posts as $post)
     <div class="post-item">
+        {{-- 投稿画像表示部分 --}}
+        @if ($post->image_path)
+        @if(Str::startsWith($post->image_path, ['http://', 'https://']))
+        <img src="{{ $post->image_path }}" alt="投稿画像" class="post-image">
+        @else
+        <img src="{{ asset($post->image_path) }}" alt="投稿画像" class="post-image">
+        @endif
+        @endif
+
         <a href="{{ route('posts.show', $post->id) }}" class="post-title">{{ $post->title }}</a>
         <div class="post-meta">{{ $post->created_at->format('Y年m月d日') }}</div>
     </div>
@@ -392,6 +408,15 @@ use Illuminate\Support\Str;
 <div id="favorites" class="tab-content">
     @forelse($user->favorites as $post)
     <div class="post-item">
+        {{-- 投稿画像表示部分 --}}
+        @if ($post->image_path)
+        @if(Str::startsWith($post->image_path, ['http://', 'https://']))
+        <img src="{{ $post->image_path }}" alt="投稿画像" class="post-image">
+        @else
+        <img src="{{ asset($post->image_path) }}" alt="投稿画像" class="post-image">
+        @endif
+        @endif
+
         <a href="{{ route('posts.show', $post->id) }}" class="post-title">{{ $post->title }}</a>
         <div class="post-meta">by {{ $post->user->name }} • {{ $post->created_at->format('Y年m月d日') }}</div>
     </div>
@@ -407,6 +432,15 @@ use Illuminate\Support\Str;
 <div id="visits" class="tab-content">
     @forelse($user->visits as $post)
     <div class="post-item">
+        {{-- 投稿画像表示部分 --}}
+        @if ($post->image_path)
+        @if(Str::startsWith($post->image_path, ['http://', 'https://']))
+        <img src="{{ $post->image_path }}" alt="投稿画像" class="post-image">
+        @else
+        <img src="{{ asset($post->image_path) }}" alt="投稿画像" class="post-image">
+        @endif
+        @endif
+
         <a href="{{ route('posts.show', $post->id) }}" class="post-title">{{ $post->title }}</a>
         <div class="post-meta">訪問日: {{ $post->pivot->created_at->format('Y年m月d日 H:i') }}</div>
     </div>

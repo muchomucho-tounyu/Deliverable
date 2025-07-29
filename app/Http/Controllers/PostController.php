@@ -19,10 +19,10 @@ class PostController extends Controller
     {
         $keyword = $request->input('keyword');
 
-        $query = Post::with(['user', 'work', 'song', 'place', 'people'])->distinct();
+        $query = Post::select('posts.*')->with(['user', 'work', 'song', 'place', 'people'])->distinct();
         if (!empty($keyword)) {
             $query->where(function ($q) use ($keyword) {
-                $q->where('title', 'like', "%{$keyword}%")
+                $q->where('posts.title', 'like', "%{$keyword}%")
                     ->orWhereHas('user', function ($subQ) use ($keyword) {
                         $subQ->where('name', 'like', "%{$keyword}%");
                     })
@@ -41,7 +41,7 @@ class PostController extends Controller
             });
         }
 
-        $posts = $query->orderBy('updated_at', 'desc')->paginate(10);
+        $posts = $query->orderBy('posts.updated_at', 'desc')->paginate(10);
 
         // デバッグ用：投稿数をログ出力
         \Log::info('投稿数: ' . $posts->count() . ', 総投稿数: ' . Post::count());

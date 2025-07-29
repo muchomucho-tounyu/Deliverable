@@ -39,14 +39,14 @@
                         @if(Auth::user()->image)
                         @if(Str::startsWith(Auth::user()->image, ['http://', 'https://']))
                         <img src="{{ Auth::user()->image }}" alt="ユーザーアイコン"
-                            class="w-6 h-6 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
+                            class="w-5 h-5 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
                         @else
                         <img src="{{ asset(Auth::user()->image) }}" alt="ユーザーアイコン"
-                            class="w-6 h-6 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
+                            class="w-5 h-5 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
                         @endif
                         @else
                         <img src="{{ asset('images/default-user.png') }}" alt="デフォルトユーザーアイコン"
-                            class="w-6 h-6 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
+                            class="w-5 h-5 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
                         @endif
                     </a>
                 </div>

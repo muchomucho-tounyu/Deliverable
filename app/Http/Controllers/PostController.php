@@ -19,7 +19,7 @@ class PostController extends Controller
     {
         $keyword = $request->input('keyword');
 
-        $query = Post::select('posts.*')->with(['user', 'work', 'song', 'place', 'people'])->distinct();
+        $query = Post::select('posts.*')->with(['user', 'work', 'song', 'place', 'people'])->distinct('posts.id');
         if (!empty($keyword)) {
             $query->where(function ($q) use ($keyword) {
                 $q->where('posts.title', 'like', "%{$keyword}%")
@@ -104,7 +104,7 @@ class PostController extends Controller
         $post = Post::create([
             'user_id' => auth()->id(),
             'title' => $data['title'],
-            'image' => $imageUrl,
+            'image_path' => $imageUrl,
             'body' => $data['body'],
             'visited' => $request->boolean('visited'),
         ]);
@@ -183,7 +183,7 @@ class PostController extends Controller
         // Cloudinary画像アップロード（あれば）
         if ($request->hasFile('image')) {
             $imageUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
-            $post->image = $imageUrl;
+            $post->image_path = $imageUrl;
         }
 
         $post->title = $data['title'];

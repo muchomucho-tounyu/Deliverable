@@ -25,12 +25,9 @@ class Post extends Model
         'song_name',
         'person_id',
         'location',
-        'image',
+        'image_path',
         'body',
         'user_id',
-
-
-
     ];
 
     public function people()

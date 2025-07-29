@@ -142,11 +142,11 @@ use Illuminate\Support\Str;
     @foreach($posts as $post)
     <div class="post-item">
         {{-- 投稿画像表示部分 --}}
-        @if ($post->image)
-        @if(Str::startsWith($post->image, ['http://', 'https://']))
-        <img src="{{ $post->image }}" alt="投稿画像" class="post-image">
+        @if ($post->image_path)
+        @if(Str::startsWith($post->image_path, ['http://', 'https://']))
+        <img src="{{ $post->image_path }}" alt="投稿画像" class="post-image">
         @else
-        <img src="{{ asset($post->image) }}" alt="投稿画像" class="post-image">
+        <img src="{{ asset($post->image_path) }}" alt="投稿画像" class="post-image">
         @endif
         @endif
 
@@ -158,12 +158,12 @@ use Illuminate\Support\Str;
             <span>by
                 @if($post->user->image)
                 @if(Str::startsWith($post->user->image, ['http://', 'https://']))
-                <img src="{{ $post->user->image }}" alt="ユーザーアイコン" class="inline w-8 h-8 rounded-full object-cover mr-1">
+                <img src="{{ $post->user->image }}" alt="ユーザーアイコン" class="inline w-6 h-6 rounded-full object-cover mr-1">
                 @else
-                <img src="{{ asset($post->user->image) }}" alt="ユーザーアイコン" class="inline w-8 h-8 rounded-full object-cover mr-1">
+                <img src="{{ asset($post->user->image) }}" alt="ユーザーアイコン" class="inline w-6 h-6 rounded-full object-cover mr-1">
                 @endif
                 @else
-                <img src="{{ asset('images/default-user.png') }}" alt="デフォルトアイコン" class="inline w-8 h-8 rounded-full object-cover mr-1">
+                <img src="{{ asset('images/default-user.png') }}" alt="デフォルトアイコン" class="inline w-6 h-6 rounded-full object-cover mr-1">
                 @endif
                 {{ $post->user->name }}
             </span>

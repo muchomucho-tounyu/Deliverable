@@ -222,11 +222,11 @@
                 <button type="submit" title="削除" style="background:none;border:none;padding:0;cursor:pointer;font-size:1.5rem;">🗑️</button>
             </form>
             @endif
-            @if ($post->image)
-            @if(Str::startsWith($post->image, ['http://', 'https://']))
-            <img src="{{ $post->image }}" alt="投稿画像" class="show-image">
+            @if ($post->image_path)
+            @if(Str::startsWith($post->image_path, ['http://', 'https://']))
+            <img src="{{ $post->image_path }}" alt="投稿画像" class="show-image">
             @else
-            <img src="{{ asset($post->image) }}" alt="投稿画像" class="show-image">
+            <img src="{{ asset($post->image_path) }}" alt="投稿画像" class="show-image">
             @endif
             @endif
             <div class="show-info">
@@ -371,8 +371,8 @@
     }
 
     .show-user-avatar {
-        width: 32px;
-        height: 32px;
+        width: 24px;
+        height: 24px;
         border-radius: 50%;
         object-fit: cover;
         border: 2px solid #fff;

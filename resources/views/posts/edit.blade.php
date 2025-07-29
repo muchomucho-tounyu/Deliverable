@@ -65,13 +65,13 @@ use Illuminate\Support\Str;
                 <input type="file" name="image" accept="image/*"
                     style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;">
 
-                @if($post->image)
+                @if($post->image_path)
                 <div style="margin-top: 15px; padding: 15px; background: #f9fafb; border-radius: 8px;">
                     <p style="font-weight: 600; margin-bottom: 10px;">現在の画像:</p>
-                    @if(Str::startsWith($post->image, ["http://", "https://"]))
-                    <img src="{{ $post->image }}" alt="現在の投稿画像" style="max-width: 200px; border-radius: 8px;">
+                    @if(Str::startsWith($post->image_path, ["http://", "https://"]))
+                    <img src="{{ $post->image_path }}" alt="現在の投稿画像" style="max-width: 200px; border-radius: 8px;">
                     @else
-                    <img src="{{ asset($post->image) }}" alt="現在の投稿画像" style="max-width: 200px; border-radius: 8px;">
+                    <img src="{{ asset($post->image_path) }}" alt="現在の投稿画像" style="max-width: 200px; border-radius: 8px;">
                     @endif
                 </div>
                 @endif
@@ -87,7 +87,7 @@ use Illuminate\Support\Str;
             <!-- ボタン -->
             <div style="display: flex; gap: 15px; justify-content: center;">
                 <button type="submit" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;">更新する</button>
-                <a href="{{ route("posts.show", $post) }}" style="background: #f3f4f6; color: #374151; border: 2px solid #e5e7eb; padding: 12px 30px; border-radius: 8px; font-size: 1rem; font-weight: 600; text-decoration: none;">キャンセル</a>
+                <a href="{{ route("posts.show", $post)}}" style="background: #f3f4f6; color: #374151; border: 2px solid #e5e7eb; padding: 12px 30px; border-radius: 8px; font-size: 1rem; font-weight: 600; text-decoration: none;">キャンセル</a>
                 <button type="button" onclick="deletePost({{ $post->id }})" style="background: #ef4444; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;">削除</button>
             </div>
         </form>

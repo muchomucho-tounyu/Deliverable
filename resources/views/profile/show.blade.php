@@ -18,7 +18,15 @@
     <div class="profile-wrapper" style="max-width:700px;margin:0 auto; padding-top:64px;">
         <div class="profile-card" style="background:#fff;border-radius:18px;box-shadow:0 4px 16px rgba(102,126,234,0.10);padding:36px 28px 32px 28px;">
             <div style="display:flex;align-items:center;gap:18px;">
-                <img src="{{ $user->image ? asset('storage/' . ltrim($user->image, '/')) : asset('images/default-user.png') }}" alt="ユーザー画像" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 8px rgba(102,126,234,0.10);background:#f3f4f6;">
+                @if($user->image)
+                @if(Str::startsWith($user->image, ['http://', 'https://']))
+                <img src="{{ $user->image }}" alt="ユーザー画像" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 8px rgba(102,126,234,0.10);background:#f3f4f6;">
+                @else
+                <img src="{{ asset($user->image) }}" alt="ユーザー画像" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 8px rgba(102,126,234,0.10);background:#f3f4f6;">
+                @endif
+                @else
+                <img src="{{ asset('images/default-user.png') }}" alt="デフォルトユーザー画像" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 8px rgba(102,126,234,0.10);background:#f3f4f6;">
+                @endif
                 <div>
                     <div style="font-size:1.5rem;font-weight:bold;color:#333;">{{ $user->name }}</div>
                     @if($user->bio)

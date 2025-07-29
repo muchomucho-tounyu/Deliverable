@@ -325,9 +325,7 @@ use Illuminate\Support\Str;
         <img src="{{ asset($user->image) }}" alt="プロフィール画像" class="profile-avatar">
         @endif
         @else
-        <div class="profile-avatar" style="background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 3rem;">
-            👤
-        </div>
+        <img src="{{ asset('images/default-user.png') }}" alt="デフォルトプロフィール画像" class="profile-avatar">
         @endif
 
 

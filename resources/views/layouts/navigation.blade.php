@@ -36,8 +36,8 @@
                 <!-- Settings Dropdown -->
                 <div class="hidden sm:flex sm:items-center sm:ms-6">
                     <a href="{{ route('mypage') }}" class="flex items-center">
-                        @if(Auth::user()->image && Auth::user()->image !== 'null')
-                        @if(str_starts_with(Auth::user()->image, 'http'))
+                        @if(Auth::user()->image)
+                        @if(Str::startsWith(Auth::user()->image, ['http://', 'https://']))
                         <img src="{{ Auth::user()->image }}" alt="ユーザーアイコン"
                             class="w-6 h-6 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
                         @else
@@ -45,12 +45,8 @@
                             class="w-6 h-6 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
                         @endif
                         @else
-                        <!-- デフォルトのユーザーアイコン（SVG） -->
-                        <div class="w-6 h-6 rounded-full bg-gray-200 border-2 border-gray-300 hover:border-blue-300 transition-colors flex items-center justify-center">
-                            <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
+                        <img src="{{ asset('images/default-user.png') }}" alt="デフォルトユーザーアイコン"
+                            class="w-6 h-6 rounded-full object-cover border-2 border-gray-200 hover:border-blue-300 transition-colors">
                         @endif
                     </a>
                 </div>

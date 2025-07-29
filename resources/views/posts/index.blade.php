@@ -153,11 +153,27 @@ use Illuminate\Support\Str;
         {{-- タイトル --}}
         <h2 class="post-title"><a href="{{ route('posts.show', $post) }}">{{ $post->title }}</a></h2>
 
-        <!-- 場所名 -->
+        <!-- 投稿者情報 -->
+        <div class="post-info">
+            <span>by
+                @if($post->user->image)
+                @if(Str::startsWith($post->user->image, ['http://', 'https://']))
+                <img src="{{ $post->user->image }}" alt="ユーザーアイコン" class="inline w-4 h-4 rounded-full object-cover mr-1">
+                @else
+                <img src="{{ asset($post->user->image) }}" alt="ユーザーアイコン" class="inline w-4 h-4 rounded-full object-cover mr-1">
+                @endif
+                @else
+                <img src="{{ asset('images/default-user.png') }}" alt="デフォルトアイコン" class="inline w-4 h-4 rounded-full object-cover mr-1">
+                @endif
+                {{ $post->user->name }}
+            </span>
+            <span>• {{ $post->created_at->format('Y年m月d日') }}</span>
+        </div>
+
+        <!-- 場所名と作品名 -->
         <div class="post-info">
             <p><strong>📍 場所:</strong> {{ $post->place->name ?? '未設定' }}</p>
 
-            <!-- 作品名または楽曲名-->
             @if ($post->work)
             <p><strong>🎬 作品:</strong> {{ $post->work->name }}</p>
             @endif

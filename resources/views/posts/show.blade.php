@@ -197,8 +197,16 @@
         <div class="show-card" style="position:relative;">
             <!-- 投稿者アイコン＋名前（タイトルの左横に並べる） -->
             <div class="show-header-row">
-                <a href="{{ url('/profile/'.$post->user->id) }}" class="show-user-link">
-                    <img src="{{ $post->user->image ? asset('storage/' . ltrim($post->user->image, '/')) : asset('images/default-user.png') }}" class="show-user-avatar" alt="ユーザーアイコン">
+                <a href="{{ route('profile.show', $post->user->id) }}" class="show-user-link">
+                    @if($post->user->image)
+                    @if(Str::startsWith($post->user->image, ['http://', 'https://']))
+                    <img src="{{ $post->user->image }}" class="show-user-avatar" alt="ユーザーアイコン">
+                    @else
+                    <img src="{{ asset($post->user->image) }}" class="show-user-avatar" alt="ユーザーアイコン">
+                    @endif
+                    @else
+                    <img src="{{ asset('images/default-user.png') }}" class="show-user-avatar" alt="デフォルトアイコン">
+                    @endif
                     <span class="show-user-name">{{ $post->user->name }}</span>
                 </a>
                 <span class="show-title">{{ $post->title }}</span>
@@ -339,38 +347,40 @@
     .show-header-row {
         display: flex;
         align-items: center;
-        gap: 18px;
-        margin-bottom: 18px;
+        gap: 12px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
     }
 
     .show-user-link {
         display: flex;
         align-items: center;
+        gap: 8px;
         text-decoration: none;
-        color: #333;
+        color: #667eea;
         font-weight: 600;
-        transition: color 0.2s;
+        padding: 6px 12px;
+        border-radius: 20px;
+        background: rgba(102, 126, 234, 0.1);
+        transition: all 0.2s;
     }
 
     .show-user-link:hover {
-        color: #667eea;
+        background: rgba(102, 126, 234, 0.2);
+        transform: translateY(-1px);
     }
 
     .show-user-avatar {
-        width: 38px;
-        height: 38px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         object-fit: cover;
-        margin-right: 8px;
         border: 2px solid #fff;
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.10);
-        background: #f3f4f6;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .show-user-name {
-        font-size: 1.02rem;
-        font-weight: bold;
-        margin-right: 2px;
+        font-size: 0.95rem;
     }
 
     .show-title {

@@ -42,11 +42,15 @@
                 <br><br>
 
                 <label>画像：</label>
-                <input type="file" name="image_path">
-                @if($post->image_path)
+                <input type="file" name="image">
+                @if($post->image)
                 <div>
                     <p>現在の画像:</p>
-                    <img src="{{ asset('storage/' . $post->image_path) }}" alt="投稿画像" style="max-width: 200px;">
+                    @if(Str::startsWith($post->image, ['http://', 'https://']))
+                    <img src="{{ $post->image }}" alt="投稿画像" style="max-width: 200px;">
+                    @else
+                    <img src="{{ asset($post->image) }}" alt="投稿画像" style="max-width: 200px;">
+                    @endif
                 </div>
                 @endif
                 <br><br>

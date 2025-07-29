@@ -59,10 +59,10 @@
                     <a href="{{ route('posts.show', $post) }}" style="text-decoration:none;color:inherit;">
                         <div style="display:flex;align-items:center;gap:16px;">
                             @if ($post->image)
-                            @if(Str::startsWith($post->image, 'http'))
+                            @if(Str::startsWith($post->image, ['http://', 'https://']))
                             <img src="{{ $post->image }}" alt="投稿画像" style="max-width:80px;border-radius:8px;">
                             @else
-                            <img src="{{ asset('storage/' . ltrim($post->image, '/')) }}" alt="投稿画像" style="max-width:80px;border-radius:8px;">
+                            <img src="{{ asset($post->image) }}" alt="投稿画像" style="max-width:80px;border-radius:8px;">
                             @endif
                             @endif
                             <div>

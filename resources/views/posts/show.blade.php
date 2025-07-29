@@ -223,10 +223,10 @@
             </form>
             @endif
             @if ($post->image)
-            @if(Str::startsWith($post->image, 'http'))
+            @if(Str::startsWith($post->image, ['http://', 'https://']))
             <img src="{{ $post->image }}" alt="投稿画像" class="show-image">
             @else
-            <img src="{{ asset('storage/' . ltrim($post->image, '/')) }}" alt="投稿画像" class="show-image">
+            <img src="{{ asset($post->image) }}" alt="投稿画像" class="show-image">
             @endif
             @endif
             <div class="show-info">

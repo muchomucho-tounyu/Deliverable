@@ -30,6 +30,11 @@ class Post extends Model
         'user_id',
     ];
 
+    // image_pathが必須であることを示すバリデーションルール
+    public static $rules = [
+        'image_path' => 'required|string',
+    ];
+
     public function people()
     {
         return $this->belongsToMany(Person::class, 'person_post', 'post_id', 'person_id');

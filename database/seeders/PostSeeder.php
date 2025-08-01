@@ -17,12 +17,12 @@ class PostSeeder extends Seeder
      */
     public function run(): void
     {
+        // image_pathが必須であることを確認
         $post1 = Post::create([
             'user_id' => 1,
             'work_id' => 1,
             'song_id' => null,
             'place_id' => 1,
-
             'image_path' => 'https://res.cloudinary.com/dp0htl54f/image/upload/v1753789097/njgpptzjgv0wcelhbra1.webp',
             'place_detail' => '成城学園',
             'title' => '花より男子の学校',
@@ -338,6 +338,13 @@ class PostSeeder extends Seeder
         ]);
 
         $post20->people()->attach([2, 18]);
-        //
+
+        // image_pathが必須であることを確認
+        $postsWithoutImage = Post::whereNull('image_path')->count();
+        if ($postsWithoutImage > 0) {
+            throw new \Exception("{$postsWithoutImage}件の投稿にimage_pathが設定されていません。");
+        }
+
+        echo "PostSeeder完了: すべての投稿にimage_pathが設定されています。\n";
     }
 }

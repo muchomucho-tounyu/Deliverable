@@ -19,57 +19,30 @@ class PostController extends Controller
     {
         $keyword = $request->input('keyword');
 
-        // まず投稿IDを取得（重複なし）
-        $postIds = Post::select('posts.id');
+        $query = Post::with(['user', 'work', 'song', 'place', 'people']);
 
         if (!empty($keyword)) {
-            $postIds->where(function ($q) use ($keyword) {
+            $query->where(function ($q) use ($keyword) {
                 $q->where('posts.title', 'like', "%{$keyword}%")
-                    ->orWhereExists(function ($subQ) use ($keyword) {
-                        $subQ->select(\DB::raw(1))
-                            ->from('users')
-                            ->whereColumn('users.id', 'posts.user_id')
-                            ->where('users.name', 'like', "%{$keyword}%");
+                    ->orWhereHas('user', function ($userQuery) use ($keyword) {
+                        $userQuery->where('name', 'like', "%{$keyword}%");
                     })
-                    ->orWhereExists(function ($subQ) use ($keyword) {
-                        $subQ->select(\DB::raw(1))
-                            ->from('works')
-                            ->join('post_work', 'works.id', '=', 'post_work.work_id')
-                            ->whereColumn('post_work.post_id', 'posts.id')
-                            ->where('works.name', 'like', "%{$keyword}%");
+                    ->orWhereHas('works', function ($workQuery) use ($keyword) {
+                        $workQuery->where('name', 'like', "%{$keyword}%");
                     })
-                    ->orWhereExists(function ($subQ) use ($keyword) {
-                        $subQ->select(\DB::raw(1))
-                            ->from('songs')
-                            ->join('post_song', 'songs.id', '=', 'post_song.song_id')
-                            ->whereColumn('post_song.post_id', 'posts.id')
-                            ->where('songs.name', 'like', "%{$keyword}%");
+                    ->orWhereHas('songs', function ($songQuery) use ($keyword) {
+                        $songQuery->where('name', 'like', "%{$keyword}%");
                     })
-                    ->orWhereExists(function ($subQ) use ($keyword) {
-                        $subQ->select(\DB::raw(1))
-                            ->from('places')
-                            ->join('place_post', 'places.id', '=', 'place_post.place_id')
-                            ->whereColumn('place_post.post_id', 'posts.id')
-                            ->where('places.name', 'like', "%{$keyword}%");
+                    ->orWhereHas('places', function ($placeQuery) use ($keyword) {
+                        $placeQuery->where('name', 'like', "%{$keyword}%");
                     })
-                    ->orWhereExists(function ($subQ) use ($keyword) {
-                        $subQ->select(\DB::raw(1))
-                            ->from('people')
-                            ->join('person_post', 'people.id', '=', 'person_post.person_id')
-                            ->whereColumn('person_post.post_id', 'posts.id')
-                            ->where('people.name', 'like', "%{$keyword}%");
+                    ->orWhereHas('people', function ($personQuery) use ($keyword) {
+                        $personQuery->where('name', 'like', "%{$keyword}%");
                     });
             });
         }
 
-        // 取得したIDで投稿を取得（重複なし）
-        $posts = Post::with(['user', 'work', 'song', 'place', 'people'])
-            ->whereIn('id', $postIds)
-            ->orderBy('updated_at', 'desc')
-            ->paginate(10);
-
-        // デバッグ用：投稿数をログ出力
-        \Log::info('投稿数: ' . $posts->count() . ', 総投稿数: ' . Post::count() . ', ページ数: ' . $posts->lastPage());
+        $posts = $query->orderBy('updated_at', 'desc')->paginate(10);
 
         return view('posts.index', compact('posts'));
     }

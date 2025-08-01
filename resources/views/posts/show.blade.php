@@ -191,7 +191,7 @@
     {{-- 一覧に戻るボタンを左上・ヘッダー下に配置 --}}
     <div style="max-width:800px;margin:0 auto 16px auto;">
         <a href="{{ route('posts.index') }}" style="display:inline-block;background:#f3f4f6;color:#667eea;font-weight:bold;padding:8px 18px;border-radius:8px;text-decoration:none;box-shadow:0 2px 8px rgba(102,126,234,0.08);margin-top:8px;">
-            b 一覧に戻る</a>
+            < 一覧に戻る</a>
     </div>
     <div class="show-wrapper">
         <div class="show-card" style="position:relative;">
